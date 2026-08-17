@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], urdu: ['Jameel Noori Nastaleeq', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fcfcfd; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.05) 0%, rgba(252, 252, 253, 1) 70%); }
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+        .toast { position:fixed; bottom:24px; right:24px; z-index:9999; padding:14px 22px; border-radius:14px; font-weight:700; font-size:0.9rem; display:none; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .toast.success { background:#22c55e; color:#fff; }
+        .toast.error { background:#ef4444; color:#fff; }
+    </style>
+</head>
+<body class="antialiased text-slate-900 pb-24 lg:pb-0">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen hero-gradient py-12 lg:py-20 px-6 transition-all duration-300 rtl:ml-0 rtl:lg:mr-64">
+        
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl font-extrabold display-font tracking-tight mb-4" data-en="Settings" data-ur="ترتیبات">Settings</h1>
+            <p class="text-slate-500 font-medium mb-12 text-lg" data-en="Manage your account preferences and integration keys." data-ur="اپنے اکاؤنٹ کی ترجیحات اور انٹیگریشن کیز کا انتظام کریں۔">Manage your account preferences and integration keys.</p>
+
+            <div class="space-y-6">
+                <!-- Account Section -->
+                <div class="bg-white border border-slate-100 rounded-[32px] p-8 shadow-sm">
+                    <h3 class="text-xl font-bold display-font mb-6" data-en="Account Settings" data-ur="اکاؤنٹ کی ترتیبات">Account Settings</h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Display Name" data-ur="ظاہری نام">Display Name</label>
+                            <input id="setting-name" type="text" value="<%= typeof user_name !== 'undefined' ? user_name : '' %>" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-medium focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Email Address" data-ur="ای میل ایڈریس">Email Address</label>
+                            <input id="setting-email" type="email" value="<%= typeof user_email !== 'undefined' ? user_email : '' %>" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-medium focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Section -->
+                <div class="bg-white border border-slate-100 rounded-[32px] p-8 shadow-sm">
+                    <h3 class="text-xl font-bold display-font mb-6" data-en="Change Password" data-ur="پاس ورڈ تبدیل کریں">Change Password</h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="New Password" data-ur="نیا پاس ورڈ">New Password</label>
+                            <input id="setting-new-password" type="password" placeholder="Leave blank to keep current" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-medium focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Confirm Password" data-ur="پاس ورڈ کی تصدیق">Confirm Password</label>
+                            <input id="setting-confirm-password" type="password" placeholder="Repeat new password" class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-medium focus:outline-none focus:border-blue-500 transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Language Section -->
+                <div class="bg-white border border-slate-100 rounded-[32px] p-8 shadow-sm">
+                    <h3 class="text-xl font-bold display-font mb-6" data-en="Language Preference" data-ur="زبان کی ترجیح">Language Preference</h3>
+                    <div class="flex gap-3">
+                        <button id="lang-en-btn" onclick="setLang('en')" class="flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all border-blue-500 bg-blue-50 text-blue-700">🇬🇧 English</button>
+                        <button id="lang-ur-btn" onclick="setLang('ur')" class="flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all border-slate-200 bg-white text-slate-600">🇵🇰 اردو</button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="bg-red-50 border border-red-100 rounded-[32px] p-8">
+                    <h3 class="text-xl font-bold display-font text-red-900 mb-2" data-en="Danger Zone" data-ur="خطرناک زون">Danger Zone</h3>
+                    <p class="text-red-700/60 font-medium mb-6 text-sm" data-en="Once you delete your account, there is no going back. Please be certain." data-ur="اکاؤنٹ حذف کرنے کے بعد واپسی ممکن نہیں ہوگی۔ براہ کرم یقینی بنا لیں۔">Once you delete your account, there is no going back. Please be certain.</p>
+                    <button onclick="confirmDelete()" class="px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-xl shadow-red-500/20" data-en="Delete Account" data-ur="اکاؤنٹ حذف کریں">Delete Account</button>
+                </div>
+            </div>
+            
+            <div class="mt-12 flex justify-end">
+                <button id="save-btn" onclick="saveSettings()" class="px-10 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 flex items-center gap-3" data-en="Save Changes" data-ur="تبدیلیاں محفوظ کریں">
+                    <i id="save-icon" class="fa-solid fa-floppy-disk"></i>
+                    <span data-en="Save Changes" data-ur="تبدیلیاں محفوظ کریں">Save Changes</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type}`;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+
+        function setLang(lang) {
+            localStorage.setItem('preferred_lang', lang);
+            document.getElementById('html-root').setAttribute('lang', lang);
+            document.getElementById('html-root').setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
+            document.getElementById('lang-en-btn').className = `flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all ${lang === 'en' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-600'}`;
+            document.getElementById('lang-ur-btn').className = `flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all ${lang === 'ur' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-600'}`;
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+            // Save to server
+            fetch('/user/update-preferences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ preferred_lang: lang })
+            }).catch(() => {});
+        }
+
+        async function saveSettings() {
+            const name = document.getElementById('setting-name').value.trim();
+            const email = document.getElementById('setting-email').value.trim();
+            const newPass = document.getElementById('setting-new-password').value;
+            const confirmPass = document.getElementById('setting-confirm-password').value;
+
+            if (newPass && newPass !== confirmPass) {
+                showToast('Passwords do not match!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('save-btn');
+            const icon = document.getElementById('save-icon');
+            btn.disabled = true;
+            icon.className = 'fa-solid fa-spinner fa-spin';
+
+            try {
+                const res = await fetch('/user/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, new_password: newPass || undefined })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Settings saved successfully! ✓', 'success');
+                    document.getElementById('setting-new-password').value = '';
+                    document.getElementById('setting-confirm-password').value = '';
+                } else {
+                    showToast(data.error || 'Failed to save settings', 'error');
+                }
+            } catch (e) {
+                showToast('Network error. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                icon.className = 'fa-solid fa-floppy-disk';
+            }
+        }
+
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                showToast('Account deletion is not available in the demo.', 'error');
+            }
+        }
+
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') {
+                globalApplyLang();
+            }
+            const lang = localStorage.getItem('preferred_lang') || 'en';
+            document.getElementById('lang-en-btn').className = `flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all ${lang === 'en' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-600'}`;
+            document.getElementById('lang-ur-btn').className = `flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all ${lang === 'ur' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-600'}`;
+        }
+        window.onload = applyLang;
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

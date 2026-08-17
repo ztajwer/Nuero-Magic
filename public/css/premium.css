@@ -1,0 +1,170 @@
+/* Premium Glassmorphic Dark Theme for NeuroMagic */
+body {
+    background-color: #0b0f19 !important;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 50%) !important;
+    color: #f1f5f9 !important;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar Dark Glassmorphism */
+#sidebar {
+    background: rgba(13, 18, 30, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+#sidebar .sidebar-link:not(.bg-slate-900):not(.bg-blue-50) {
+    color: #94a3b8 !important;
+}
+
+#sidebar .sidebar-link:not(.bg-slate-900):not(.bg-blue-50):hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+}
+
+/* Cards Glassmorphism */
+.premium-card, .option-card, .template-card {
+    background: rgba(18, 25, 41, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.premium-card:hover, .option-card:hover, .template-card:hover {
+    transform: translateY(-4px) !important;
+    border-color: rgba(99, 102, 241, 0.4) !important;
+    box-shadow: 0 20px 40px -5px rgba(99, 102, 241, 0.15) !important;
+    background: rgba(22, 30, 49, 0.75) !important;
+}
+
+/* Text colors inside dark cards */
+.premium-card p, .premium-card span, 
+.option-card p, .option-card span,
+.template-card p, .template-card span {
+    color: #94a3b8 !important;
+}
+
+.premium-card h1, .premium-card h2, .premium-card h3,
+.option-card h1, .option-card h2, .option-card h3,
+.template-card h1, .template-card h2, .template-card h3 {
+    color: #ffffff !important;
+}
+
+/* Buttons style overrides */
+.bg-slate-900 {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+.bg-slate-900:hover {
+    background: linear-gradient(135deg, #5a52e6 0%, #4c8ff7 100%) !important;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35) !important;
+}
+
+.bg-blue-50 {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+}
+.bg-blue-50:hover {
+    background: rgba(59, 130, 246, 0.18) !important;
+}
+
+/* Inputs, Textareas, Selects */
+.q-input, textarea, input, select {
+    background-color: rgba(13, 18, 30, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #f8fafc !important;
+}
+.q-input:focus, textarea:focus, input:focus, select:focus {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25) !important;
+}
+
+/* Input toolbars */
+.input-box {
+    background: rgba(15, 22, 38, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+.input-box:focus-within {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15) !important;
+}
+
+.bg-slate-50\/50 {
+    background: rgba(13, 18, 30, 0.4) !important;
+}
+
+.bg-slate-50 {
+    background: rgba(13, 18, 30, 0.6) !important;
+}
+
+/* Modals */
+#modal-box, #login-box {
+    background: #0f1422 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+    color: #f1f5f9 !important;
+}
+
+#modal-box h3, #modal-box p, #login-box h3, #login-box p {
+    color: #ffffff !important;
+}
+
+#modal-box .bg-slate-50, #modal-box .bg-gradient-to-br {
+    background: rgba(18, 25, 41, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Headings color */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+/* Subtext colors */
+.text-slate-500, .text-slate-400 {
+    color: #94a3b8 !important;
+}
+
+.text-slate-900 {
+    color: #f8fafc !important;
+}
+
+/* Main Result text styling */
+#modal-text {
+    color: #e2e8f0 !important;
+}
+#modal-original-text {
+    color: #94a3b8 !important;
+}
+
+/* Specific text input placeholder color */
+::placeholder {
+    color: #64748b !important;
+}
+
+/* Fix text selections */
+::selection {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+}
+
+/* Background elements glow */
+.hero-gradient {
+    background: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.12) 0%, rgba(11, 15, 25, 1) 70%) !important;
+}
+
+/* Project Memory wrapper */
+#project-memory-wrap {
+    background: rgba(18, 25, 41, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        urdu: ['Jameel Noori Nastaleeq', 'serif'],
+                    },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a', 950: '#172554' }
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 40px -10px rgba(15,23,42,0.1)',
+                        'premium-hover': '0 20px 50px -10px rgba(15,23,42,0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fcfcfd; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.08) 0%, rgba(252, 252, 253, 1) 70%); }
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+        [dir="rtl"] input, [dir="rtl"] textarea { text-align: right; }
+    </style>
+</head>
+<body class="antialiased text-slate-900 min-h-screen flex flex-col justify-center items-center px-6 py-12 hero-gradient relative overflow-hidden">
+
+    <!-- Decorative Background Blobs -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-[-1] flex justify-center items-center">
+        <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse" style="animation-duration: 8s;"></div>
+        <div class="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-pulse" style="animation-duration: 10s; animation-delay: 2s;"></div>
+    </div>
+
+    <div class="fixed top-6 right-6 z-50">
+        <button onclick="toggleLang()" class="text-xs font-bold text-slate-500 bg-white border border-slate-100 px-4 py-2 rounded-xl hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-earth-asia"></i> <span id="lang-label">EN / اردو</span>
+        </button>
+    </div>
+
+    <div class="mb-10 text-center">
+        <div class="flex items-center gap-3 justify-center mb-12">
+            <img src="/images/logo.jpeg" alt="Logo" class="h-16 w-auto object-contain rounded-xl">
+        </div>
+        <h1 class="text-4xl font-extrabold display-font tracking-tight mb-2" data-en="Create your account" data-ur="اپنا اکاؤنٹ بنائیں">Create your account</h1>
+        <p class="text-slate-500 font-medium" data-en="Join thousands of professionals and start creating better today." data-ur="ہزاروں ماہرین میں شامل ہوں اور آج ہی بہتر تخلیق شروع کریں۔">Join thousands of professionals and start creating better today.</p>
+    </div>
+
+    <div class="w-full max-w-lg bg-white/80 backdrop-blur-2xl border border-white rounded-[40px] p-10 shadow-[0_20px_60px_-15px_rgba(59,130,246,0.1)] hover:shadow-[0_30px_70px_-15px_rgba(59,130,246,0.15)] transition-all duration-300">
+
+        <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+        <div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6">
+            <% errors.forEach(function(err) { %>
+            <p class="text-red-600 text-sm font-semibold flex items-center gap-2 mb-1"><i class="fa-solid fa-circle-exclamation text-xs"></i> <%= err %></p>
+            <% }); %>
+        </div>
+        <% } %>
+
+        <form action="/auth/register" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Full Name" data-ur="مکمل نام">Full Name</label>
+                    <input type="text" name="name" required placeholder="John Doe" data-placeholder-en="John Doe" data-placeholder-ur="اپنا نام لکھیں" value="<%= typeof name !== 'undefined' ? name : '' %>" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-medium focus:outline-none focus:border-blue-500 transition-all placeholder:text-slate-300">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Email Address" data-ur="ای میل ایڈریس">Email Address</label>
+                    <input type="email" name="email" required placeholder="name@company.com" data-placeholder-en="name@company.com" data-placeholder-ur="ای میل درج کریں" value="<%= typeof email !== 'undefined' ? email : '' %>" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-medium focus:outline-none focus:border-blue-500 transition-all placeholder:text-slate-300">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Password" data-ur="پاس ورڈ">Password</label>
+                <div class="relative">
+                    <input type="password" id="register-password" name="password" required placeholder="Minimum 8 characters" data-placeholder-en="Minimum 8 characters" data-placeholder-ur="کم از کم 8 حروف" minlength="8" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-medium focus:outline-none focus:border-blue-500 transition-all placeholder:text-slate-300 pr-12">
+                    <button type="button" onclick="togglePassword('register-password')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none">
+                        <i class="fa-solid fa-eye" id="register-password-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1" data-en="Profile Picture (Optional)" data-ur="پروفائل تصویر (اختیاری)">Profile Picture (Optional)</label>
+                <input type="file" name="avatar" accept="image/*" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-3 font-medium text-sm text-slate-500 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100">
+            </div>
+
+            <button type="submit" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-bold shadow-xl shadow-slate-900/10 hover:bg-black transition-all active:scale-95 text-xl" data-en="Create Account" data-ur="اکاؤنٹ بنائیں">
+                Create Account
+            </button>
+        </form>
+
+        <div class="mt-8 pt-8 border-t border-slate-50 text-center">
+            <p class="text-slate-400 text-sm font-medium">
+                <span data-en="Already have an account?" data-ur="پہلے سے اکاؤنٹ ہے؟">Already have an account?</span> 
+                <a href="/auth/login" class="text-blue-600 font-bold hover:underline" data-en="Log in" data-ur="لاگ ان کریں">Log in</a>
+            </p>
+        </div>
+
+    </div>
+
+    <div class="mt-12 text-slate-300 text-[10px] font-bold uppercase tracking-widest" data-en="No Credit Card Required" data-ur="کریڈٹ کارڈ کی ضرورت نہیں">No Credit Card Required</div>
+
+    <script>
+        function toggleLang() {
+            const currentLang = localStorage.getItem('preferred_lang') === 'en' ? 'ur' : 'en';
+            localStorage.setItem('preferred_lang', currentLang);
+            applyLang();
+        }
+
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const passwordIcon = document.getElementById(inputId + '-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        }
+
+        function applyLang() {
+            const lang = localStorage.getItem('preferred_lang') || 'en';
+            const ur = lang === 'ur';
+            const root = document.getElementById('html-root');
+            root.setAttribute('dir', ur ? 'rtl' : 'ltr');
+            
+            // Font Size
+            document.body.style.fontSize = ur ? '1.1rem' : '';
+
+            // Logo Swap
+            const logo = document.querySelector('img[alt="Logo"]');
+            if (logo) logo.src = ur ? '/images/logourdu.jpeg' : '/images/logo.jpeg';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = ur ? el.getAttribute('data-ur') : el.getAttribute('data-en');
+                if (text) {
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        const temp = icon.outerHTML;
+                        el.innerHTML = temp + ' ' + text;
+                    } else {
+                        el.innerText = text;
+                    }
+                }
+            });
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                el.placeholder = ur ? el.getAttribute('data-placeholder-ur') : el.getAttribute('data-placeholder-en');
+            });
+        }
+        window.onload = applyLang;
+    </script>
+</body>
+</html>

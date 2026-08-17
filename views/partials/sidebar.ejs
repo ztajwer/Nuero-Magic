@@ -1,0 +1,177 @@
+<!-- views/partials/sidebar.ejs -->
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-100 z-50 transition-all duration-300 hidden lg:flex flex-col rtl:left-auto rtl:right-0 rtl:border-r-0 rtl:border-l overflow-y-auto">
+    <div class="p-5 lg:p-6 flex items-center justify-center lg:justify-start border-b border-slate-50 lg:border-none">
+        <a href="/user/dashboard" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img src="/images/logo.jpeg" alt="Logo" class="h-10 lg:h-12 w-auto rounded-xl object-contain">
+        </a>
+    </div>
+
+    <div class="mt-4 px-4 space-y-2">
+        <a href="/user/generate-prompt" class="sidebar-link flex items-center gap-3 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-xl shadow-slate-900/10 hover:bg-slate-800 transition-all active:scale-95 group">
+            <i class="fa-solid fa-plus text-sm group-hover:rotate-90 transition-transform"></i>
+            <span data-en="Generate Magic" data-ur="جادو بنائیں">Generate Magic</span>
+        </a>
+        <a href="/user/enhance-creation" class="sidebar-link flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-xl font-bold border border-blue-200 hover:bg-blue-100 transition-all active:scale-95 group mb-6">
+            <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+            <span data-en="Refine Magic" data-ur="جادو سنواریں">Refine Magic</span>
+        </a>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-1">
+        <a href="/user/dashboard" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-compass text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="Dashboard" data-ur="ڈیش بورڈ">Dashboard</span>
+        </a>
+        <a href="/user/history-page" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-clock-rotate-left text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="History" data-ur="گزشتہ ریکارڈ">History</span>
+        </a>
+        <a href="/user/templates" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-layer-group text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="Templates" data-ur="ٹیمپلیٹس">Templates</span>
+        </a>
+        <a href="/user/folders" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-folder-tree text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="Folders" data-ur="فولڈرز">Folders</span>
+        </a>
+        <a href="/user/favorites-page" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-heart text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="Favorites" data-ur="پسندیدہ">Favorites</span>
+        </a>
+        <a href="/user/plans" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
+            <i class="fa-solid fa-crown text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="Pro Plans" data-ur="پرو پلانز">Pro Plans</span>
+        </a>
+        <button onclick="toggleLang()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group mt-2">
+            <i class="fa-solid fa-earth-asia text-lg opacity-70 group-hover:opacity-100 transition-opacity"></i>
+            <span data-en="English / Urdu" data-ur="اردو / English">English / Urdu</span>
+        </button>
+        
+            </nav>
+
+    <div class="p-4 mt-auto border-t border-slate-50">
+        <a href="/user/profile" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-all group mb-2">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                <%= typeof user_name !== 'undefined' ? user_name.substring(0, 1).toUpperCase() : 'U' %>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-sm font-bold text-slate-800 truncate w-32"><%= typeof user_name !== 'undefined' ? user_name : 'User' %></span>
+                <span class="text-xs text-slate-400 font-medium">
+                    <span class="uppercase"><%= (typeof subscription_plan !== 'undefined' ? subscription_plan : 'free') %></span>
+                    <span> · </span>
+                    <span><%= (typeof subscription_status !== 'undefined' ? subscription_status : 'inactive') %></span>
+                </span>
+            </div>
+        </a>
+        <button onclick="window.location.href='/auth/logout'" class="w-full flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-red-500 transition-colors font-semibold text-sm">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span data-en="Logout" data-ur="لاگ آؤٹ">Logout</span>
+        </button>
+    </div>
+</aside>
+
+<style>
+    /* Global RTL Layout Fixes */
+    html[dir="rtl"] body {
+        text-align: right !important;
+    }
+    html[dir="rtl"] .lg\:ml-64 {
+        margin-left: 0 !important;
+        margin-right: 16rem !important;
+    }
+    @media (max-width: 1023px) {
+        html[dir="rtl"] .lg\:ml-64 {
+            margin-right: 0 !important;
+        }
+    }
+</style>
+
+<script>
+function globalApplyLang() {
+    const savedLang = localStorage.getItem('preferred_lang') || 'en';
+    const root = document.getElementById('html-root') || document.body;
+    const isUrdu = savedLang === 'ur';
+    
+    // Set Direction
+    root.setAttribute('dir', isUrdu ? 'rtl' : 'ltr');
+    root.classList.toggle('urdu-mode', isUrdu);
+    
+    // Global Layout Fix for RTL Sidebar
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+        if (isUrdu && window.innerWidth >= 1024) { // 1024px is Tailwind's 'lg' breakpoint
+            mainContent.style.marginLeft = '0';
+            mainContent.style.marginRight = '16rem';
+        } else {
+            mainContent.style.marginLeft = '';
+            mainContent.style.marginRight = '';
+        }
+    }
+    
+    if (isUrdu) {
+        root.classList.add('urdu-font');
+        document.body.style.fontSize = '1.1rem'; // Increase font size for Urdu
+    } else {
+        root.classList.remove('urdu-font');
+        document.body.style.fontSize = ''; // Reset font size
+    }
+
+    // Handle Logo Swap
+    const logoImg = document.querySelector('aside img, .lg\\:hidden img');
+    if (logoImg) {
+        const currentSrc = logoImg.getAttribute('src');
+        if (isUrdu) {
+            logoImg.setAttribute('src', '/images/logourdu.jpeg');
+        } else {
+            logoImg.setAttribute('src', '/images/logo.jpeg');
+        }
+    }
+
+    // Translate all data-en/ur elements
+    document.querySelectorAll('[data-en]').forEach(el => {
+        const text = isUrdu ? el.getAttribute('data-ur') : el.getAttribute('data-en');
+        if (text) {
+            // Handle placeholders
+            if (el.hasAttribute('data-placeholder-en')) {
+                el.placeholder = isUrdu ? el.getAttribute('data-placeholder-ur') : el.getAttribute('data-placeholder-en');
+            } else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = text;
+            } else {
+                // Keep icons if they exist
+                const icon = el.querySelector('i');
+                if (icon) {
+                    const temp = icon.outerHTML;
+                    el.innerHTML = temp + ' ' + text;
+                } else {
+                    el.innerText = text;
+                }
+            }
+        }
+    });
+
+    // Handle Title tags specifically
+    if (isUrdu) {
+        if (document.title.includes('|')) {
+            const parts = document.title.split('|');
+            // Check if we have an Urdu translation for the page title in the meta or elsewhere
+            // For now, we'll just swap some common ones or keep it as is if not possible
+        }
+    }
+
+    // Update Language Label Button
+    const langLabel = document.getElementById('lang-label');
+    if (langLabel) {
+        langLabel.innerText = isUrdu ? 'اردو / English' : 'EN / اردو';
+    }
+}
+
+function toggleLang() {
+    const currentLang = localStorage.getItem('preferred_lang') === 'en' ? 'ur' : 'en';
+    localStorage.setItem('preferred_lang', currentLang);
+    globalApplyLang();
+    window.dispatchEvent(new Event('languageChanged'));
+}
+
+document.addEventListener('DOMContentLoaded', globalApplyLang);
+window.addEventListener('languageChanged', globalApplyLang);
+</script>

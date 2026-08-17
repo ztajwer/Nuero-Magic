@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Folders | NeuroMagic</title>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], urdu: ['Jameel Noori Nastaleeq', 'sans-serif'] } } } }</script>
+    <style>
+        * { box-sizing: border-box; }
+        body { background: #f8fafc; font-family: 'Inter', sans-serif; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* RTL */
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.15rem !important; text-align: right !important; }
+        [dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select, [dir="rtl"] button { font-family: 'Jameel Noori Nastaleeq', serif !important; text-align: right !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.25rem !important; }
+        [dir="rtl"] .lg\:ml-64 { margin-left: 0 !important; margin-right: 16rem !important; }
+
+        /* Folder Cards */
+        .folder-card { background: #fff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 24px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
+        .folder-card:hover { border-color: #3b82f6; box-shadow: 0 8px 30px rgba(59,130,246,.12); transform: translateY(-2px); }
+        .folder-card.selected { border-color: #3b82f6; background: #eff6ff; }
+
+        /* Memory Items */
+        .memory-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all .2s; }
+        .memory-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+
+        /* Modal */
+        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.65); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        #modal-overlay.show { display: flex; }
+        #modal-box { background: #fff; border-radius: 28px; padding: 36px; width: 100%; max-width: 500px; position: relative; margin: auto; animation: popIn .3s cubic-bezier(.16,1,.3,1); }
+        @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Toast */
+        #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; padding: 14px 24px; border-radius: 100px; font-weight: 700; font-size: 14px; z-index: 9999; transition: all .4s cubic-bezier(.16,1,.3,1); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 20px 40px rgba(0,0,0,.3); }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 1023px) { body { padding-bottom: 80px; } }
+    </style>
+    
+</head>
+
+<body class="antialiased text-slate-900">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen transition-all duration-300 rtl:ml-0 rtl:lg:mr-64">
+
+        <!-- Mobile Header -->
+        <header class="lg:hidden sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-5 py-4 flex items-center justify-between">
+            <img src="/images/logo.jpeg" alt="Logo" class="w-[120px] h-[60px] rounded-xl object-contain">
+            <div class="flex items-center gap-2">
+                <button onclick="toggleLang()" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg" data-en="EN / اردو" data-ur="اردو / EN">EN / اردو</button>
+                <% if(typeof is_guest !=='undefined' && is_guest) { %>
+                    <button onclick="showLoginNudge()" class="text-xs font-bold text-blue-600 bg-blue-50 px-4 py-1.5 rounded-xl" data-en="Log In" data-ur="لاگ ان">Log In</button>
+                <% } else { %>
+                    <a href="/auth/logout" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl" data-en="Logout" data-ur="لاگ آؤٹ">Logout</a>
+                <% } %>
+            </div>
+        </header>
+
+        <div class="max-w-6xl mx-auto px-5 py-10 lg:py-16">
+
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-4xl lg:text-5xl font-extrabold display-font tracking-tight mb-3">
+                    Project <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Folders</span>
+                </h1>
+                <p class="text-slate-500 font-medium text-lg" data-en="Organize your prompts with intelligent memory" data-ur="اپنے پرامپٹس کو ذہنی یادداشت کے ساتھ منظم کریں">Organize your prompts with intelligent memory</p>
+                <div id="plan-badge" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold">
+                    <i class="fa-solid fa-folder-tree"></i>
+                    <span>Plus feature</span>
+                </div>
+            </div>
+
+            <!-- Create Folder Button -->
+            <div class="flex justify-center mb-8">
+                <button onclick="showCreateFolderModal()" class="flex items-center gap-2.5 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-95 shadow-xl shadow-blue-500/30 text-sm">
+                    <i class="fa-solid fa-folder-plus"></i>
+                    <span data-en="Create New Folder" data-ur="نیا فولڈر بنائیں">Create New Folder</span>
+                </button>
+            </div>
+
+            <!-- Folders Grid -->
+            <div id="folders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Folders will be loaded here -->
+            </div>
+
+            <!-- Folder Details Section -->
+            <div id="folder-details" class="hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <button onclick="backToFolders()" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-all">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <div>
+                            <h2 id="folder-name" class="text-2xl font-extrabold display-font"></h2>
+                            <p id="folder-memory-count" class="text-slate-400 text-sm"></p>
+                        </div>
+                    </div>
+                    <button onclick="showDeleteFolderModal()" class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 transition-all">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+
+                <!-- Memory Items -->
+                <div id="memory-items" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Memory items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16">
+                <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fa-solid fa-folder-open text-slate-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-extrabold display-font mb-2" data-en="No folders yet" data-ur="ابھی تک کوئی فولڈر نہیں">No folders yet</h3>
+                <p class="text-slate-400 text-sm mb-6" data-en="Create your first project folder to start organizing your prompts" data-ur="اپنے پرامپٹس منظم کرنے کے لیے اپنا پہلا پروجیکٹ فولڈر بنائیں">Create your first project folder to start organizing your prompts</p>
+                <button onclick="showCreateFolderModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">
+                    <i class="fa-solid fa-plus"></i>
+                    <span data-en="Create Folder" data-ur="فولڈر بنائیں">Create Folder</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <!-- Create Folder Modal -->
+    <div id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div id="modal-box">
+            <button onclick="closeModal()" class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-all border-0 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-5 shadow-xl shadow-blue-200">
+                    <i class="fa-solid fa-folder-plus text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold display-font mb-2" data-en="Create New Folder" data-ur="نیا فولڈر بنائیں">Create New Folder</h3>
+                <p class="text-slate-400 text-sm font-medium" data-en="Give your project a memorable name" data-ur="اپنے پروجیکٹ کو ایک یادگار نام دیں">Give your project a memorable name</p>
+            </div>
+            <input id="folder-name-input" type="text" maxlength="120" placeholder="e.g., Marketing Campaign, Website Redesign" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3 text-base font-medium focus:outline-none focus:border-blue-500 focus:bg-white transition-all" />
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                    <span data-en="Cancel" data-ur="منسوخ کریں">Cancel</span>
+                </button>
+                <button onclick="createFolder()" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-extrabold hover:from-blue-700 hover:to-indigo-700 transition-all">
+                    <span data-en="Create Folder" data-ur="فولڈر بنائیں">Create Folder</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Folder Modal -->
+    <div id="delete-modal-overlay" class="hidden" onclick="handleDeleteOverlayClick(event)">
+        <div id="delete-modal-box" class="bg-white rounded-2xl p-6 max-w-md mx-auto">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <i class="fa-solid fa-exclamation-triangle text-red-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-extrabold display-font mb-2" data-en="Delete Folder?" data-ur="فولڈر حذف کریں؟">Delete Folder?</h3>
+                <p class="text-slate-400 text-sm" data-en="This will permanently delete the folder and all its memory. This action cannot be undone." data-ur="یہ فولڈر اور اس کی تمام یادداشت کو مستقل طور پر حذف کر دے گا۔ اس عمل کو واپس نہیں کیا جا سکتا۔">This will permanently delete the folder and all its memory. This action cannot be undone.</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                    <span data-en="Cancel" data-ur="منسوخ کریں">Cancel</span>
+                </button>
+                <button onclick="deleteFolder()" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-extrabold hover:bg-red-700 transition-all">
+                    <span data-en="Delete Forever" data-ur="ہمیشہ کے لیے حذف کریں">Delete Forever</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">
+        <i id="toast-icon" class="fa-solid fa-check text-green-400"></i>
+        <span id="toast-msg">Done!</span>
+    </div>
+
+    <script defer>
+        // ═══ STATE ═══
+        const isGuest = <%- typeof is_guest !== 'undefined' ? is_guest : 'true' %>;
+        const subscriptionPlan = "<%= typeof subscription_plan !== 'undefined' ? subscription_plan : 'free' %>";
+        const subscriptionStatus = "<%= typeof subscription_status !== 'undefined' ? subscription_status : 'inactive' %>";
+        const activePaidStatuses = ['active', 'trialing', 'past_due'];
+        const hasPaidAccess = activePaidStatuses.includes(String(subscriptionStatus || '').toLowerCase());
+        const accessTier = isGuest ? 'guest' : (hasPaidAccess ? String(subscriptionPlan || 'free').toLowerCase() : 'free');
+        const canUseProjectMemory = accessTier === 'plus';
+        let currentLang = localStorage.getItem('preferred_lang') || 'en';
+        let folders = [];
+        let currentFolder = null;
+        let folderToDelete = null;
+
+        // ═══ MODAL ═══
+        function showCreateFolderModal() {
+            if (!canUseProjectMemory) {
+                showToast('🔒', currentLang === 'ur' ? 'یہ فیچر صرف Plus پلان کے لیے ہے۔' : 'This feature is for Plus users only.', true);
+                return;
+            }
+            document.getElementById('modal-overlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('folder-name-input').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('show');
+            document.body.style.overflow = '';
+            document.getElementById('folder-name-input').value = '';
+        }
+
+        function handleOverlayClick(e) { if (e.target.id === 'modal-overlay') closeModal(); }
+
+        function showDeleteFolderModal() {
+            if (!currentFolder) return;
+            folderToDelete = currentFolder;
+            document.getElementById('delete-modal-overlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal-overlay').classList.add('hidden');
+            document.body.style.overflow = '';
+            folderToDelete = null;
+        }
+
+        function handleDeleteOverlayClick(e) { if (e.target.id === 'delete-modal-overlay') closeDeleteModal(); }
+
+        // ═══ FOLDER OPERATIONS ═══
+        async function createFolder() {
+            const name = document.getElementById('folder-name-input').value.trim();
+            if (!name) {
+                showToast('⚠️', currentLang === 'ur' ? 'فولڈر کا نام درج کریں۔' : 'Please enter a folder name.', true);
+                return;
+            }
+
+            try {
+                const res = await fetch('/user/projects', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'Could not create folder.');
+                
+                closeModal();
+                await loadFolders();
+                showToast('📁', currentLang === 'ur' ? 'فولڈر بن گیا!' : 'Folder created!');
+            } catch (e) {
+                showToast('❌', e.message || 'Failed', true);
+            }
+        }
+
+        async function deleteFolder() {
+            if (!folderToDelete) return;
+
+            try {
+                const res = await fetch(`/user/projects/${folderToDelete.id}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'Could not delete folder.');
+                
+                closeDeleteModal();
+                currentFolder = null;
+                await loadFolders();
+                showFoldersView();
+                showToast('🗑️', currentLang === 'ur' ? 'فولڈر حذف ہو گیا!' : 'Folder deleted!');
+            } catch (e) {
+                showToast('❌', e.message || 'Failed', true);
+            }
+        }
+
+        // ═══ VIEW MANAGEMENT ═══
+        function showFoldersView() {
+            document.getElementById('folders-grid').classList.remove('hidden');
+            document.getElementById('folder-details').classList.add('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+            currentFolder = null;
+        }
+
+        function showFolderDetails(folder) {
+            currentFolder = folder;
+            document.getElementById('folders-grid').classList.add('hidden');
+            document.getElementById('folder-details').classList.remove('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+            
+            document.getElementById('folder-name').innerText = folder.name;
+            document.getElementById('folder-memory-count').innerText = `${folder.memory_count || 0} memories`;
+            
+            loadFolderMemory(folder.id);
+        }
+
+        function backToFolders() {
+            showFoldersView();
+        }
+
+        // ═══ DATA LOADING ═══
+        async function loadFolders() {
+            if (!canUseProjectMemory) return;
+
+            try {
+                const res = await fetch('/user/projects');
+                if (!res.ok) return;
+                folders = await res.json();
+                renderFolders();
+            } catch (e) {
+                console.error('Failed to load folders:', e);
+            }
+        }
+
+        async function loadFolderMemory(folderId) {
+            try {
+                const res = await fetch(`/user/projects/${folderId}/context?limit=20`);
+                if (!res.ok) return;
+                const memories = await res.json();
+                renderMemories(memories);
+            } catch (e) {
+                console.error('Failed to load folder memory:', e);
+            }
+        }
+
+        function renderFolders() {
+            const grid = document.getElementById('folders-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (!folders || folders.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            grid.innerHTML = folders.map(folder => `
+                <div class="folder-card" onclick="showFolderDetails(${JSON.stringify(folder).replace(/</g,'\\u003c')})">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-folder text-blue-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-extrabold text-slate-900 text-lg leading-tight mb-1">${folder.name}</h3>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">${folder.memory_count || 0} memories</p>
+                            <p class="text-[10px] text-slate-300 mt-1">${new Date(folder.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMemories(memories) {
+            const container = document.getElementById('memory-items');
+            if (!memories || memories.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-8">No memories yet in this folder.</p>';
+                return;
+            }
+
+            container.innerHTML = memories.map(memory => `
+                <div class="memory-item">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa-solid fa-message text-slate-500 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-slate-700 mb-2">${memory.question_text}</p>
+                            <p class="text-xs text-slate-500 leading-relaxed">${memory.answer_text}</p>
+                            <p class="text-[10px] text-slate-300 mt-2">${new Date(memory.created_at).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ═══ UTILITIES ═══
+        function showToast(icon, msg, isError = false) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-icon').className = isError ? 'fa-solid fa-triangle-exclamation text-red-400' : 'fa-solid fa-check text-green-400';
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ur' : 'en';
+            localStorage.setItem('preferred_lang', currentLang);
+            applyLang();
+        }
+
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+            // Re-render current view with new language
+            if (currentFolder) {
+                showFolderDetails(currentFolder);
+            } else {
+                renderFolders();
+            }
+        }
+
+        // ═══ INITIALIZATION ═══
+        window.onload = async () => {
+            applyLang();
+            
+            if (!canUseProjectMemory) {
+                document.getElementById('folders-grid').classList.add('hidden');
+                document.getElementById('empty-state').classList.remove('hidden');
+                const badge = document.getElementById('plan-badge');
+                badge.innerHTML = '<i class="fa-solid fa-lock"></i><span>Upgrade to Plus for Folders</span>';
+                badge.className = 'mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-100 text-amber-700 text-sm font-bold';
+                return;
+            }
+
+            await loadFolders();
+            showFoldersView();
+        };
+
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+
+</body>
+</html>

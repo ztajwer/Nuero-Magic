@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Magic | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif'],urdu:['Jameel Noori Nastaleeq','sans-serif']}}}}</script>
+    <style>
+        body { background: #fcfcfd; font-family: 'Inter', sans-serif; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59,130,246,0.05) 0%, rgba(252,252,253,1) 70%); }
+
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.15rem !important; text-align: right !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.25rem !important; }
+        [dir="rtl"] .lg\:ml-64 { margin-left: 0 !important; margin-right: 16rem !important; }
+        [dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3,[dir="rtl"] p,[dir="rtl"] span,[dir="rtl"] input,[dir="rtl"] textarea,[dir="rtl"] button { font-family: 'Jameel Noori Nastaleeq', serif !important; text-align: right !important; }
+
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .option-card { cursor: pointer; transition: all 0.3s cubic-bezier(0.165,0.84,0.44,1); border: 2px solid transparent; }
+        .option-card:hover { transform: translateY(-4px); border-color: #3b82f6; background: #fff; box-shadow: 0 20px 40px rgba(59,130,246,0.05); }
+        .option-card.selected { border-color: #3b82f6; background: #fff; box-shadow: 0 20px 40px rgba(59,130,246,0.1); }
+
+        .q-input { background: #fff; border: 2px solid #e2e8f0; border-radius: 16px; padding: 14px 18px; width: 100%; font-size: 0.95rem; transition: all 0.2s; }
+        .q-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+
+        .progress-bar { height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #6366f1); border-radius: 4px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+    </style>
+    
+</head>
+<body class="antialiased text-slate-900">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen hero-gradient flex flex-col items-center justify-start py-12 px-6">
+
+        <!-- Progress -->
+        <div class="max-w-3xl w-full mb-8">
+            <div class="progress-bar"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+            <p class="text-xs font-bold text-slate-400 mt-2" id="step-label" data-en="Step 1 of 4" data-ur="مرحلہ 1 از 4">Step 1 of 4</p>
+        </div>
+
+        <div class="max-w-3xl w-full text-center mb-8">
+            <h1 class="text-3xl lg:text-4xl font-extrabold display-font tracking-tight mb-3" id="main-title" data-en="What are we creating today?" data-ur="آج ہم کیا تخلیق کر رہے ہیں؟">What are we creating today?</h1>
+            <p class="text-slate-500 font-medium" id="main-sub" data-en="Answer a few simple questions and I'll generate the perfect instruction for you." data-ur="چند آسان سوالات کے جواب دیں اور میں آپ کے لیے بہترین ہدایت تیار کروں گا۔">Answer a few simple questions and I'll generate the perfect prompt for you.</p>
+            <a href="/user/enhance-creation" class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 transition-all underline-offset-4 hover:underline">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span data-en="Already have an instruction? Go directly to Refine" data-ur="اگر ہدایت پہلے سے ہے تو سیدھا Refine پر جائیں">Already have a prompt? Go directly to Enhance</span>
+            </a>
+        </div>
+
+        <div class="max-w-4xl w-full bg-white/80 backdrop-blur-2xl border border-white/50 rounded-[40px] p-6 lg:p-12 shadow-[0_20px_50px_-12px_rgba(59,130,246,0.1)] relative">
+            <!-- Decorative Glow -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Step 1: Category -->
+            <div id="step-1" class="wizard-step active">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('writing','fa-pen-nib')">
+                        <i class="fa-solid fa-pen-nib text-3xl text-blue-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Writing" data-ur="تحریر">Writing</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('image','fa-palette')">
+                        <i class="fa-solid fa-palette text-3xl text-indigo-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Image" data-ur="تصویر">Image</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('code','fa-code')">
+                        <i class="fa-solid fa-code text-3xl text-emerald-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Coding" data-ur="کوڈنگ">Coding</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('business','fa-briefcase')">
+                        <i class="fa-solid fa-briefcase text-3xl text-orange-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Business" data-ur="کاروبار">Business</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('marketing','fa-bullhorn')">
+                        <i class="fa-solid fa-bullhorn text-3xl text-purple-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Marketing" data-ur="مارکیٹنگ">Marketing</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center" onclick="selectCategory('social','fa-hashtag')">
+                        <i class="fa-solid fa-hashtag text-3xl text-pink-600 mb-4"></i>
+                        <h3 class="font-bold display-font" data-en="Social Media" data-ur="سوشل میڈیا">Social Media</h3>
+                    </div>
+                    <div class="option-card bg-slate-50/50 p-8 rounded-3xl text-center border-2 border-dashed border-slate-300" onclick="showOtherCategoryInput()">
+                        <i class="fa-solid fa-ellipsis-h text-3xl text-slate-400 mb-4"></i>
+                        <h3 class="font-bold display-font text-slate-600" data-en="Other" data-ur="Other">Other</h3>
+                        <p class="text-xs text-slate-400 mt-1" data-en="Custom category" data-ur="Custom category">Custom category</p>
+                    </div>
+                </div>
+                
+                <!-- Custom Category Input (Hidden by default) -->
+                <div id="custom-category-input" class="hidden mt-6">
+                    <div class="bg-white border border-blue-200 rounded-2xl p-6 shadow-lg">
+                        <label class="block text-sm font-bold text-slate-700 mb-2" data-en="What's your custom category?" data-ur="Apni custom category batayein">What's your custom category?</label>
+                        <div class="flex gap-3">
+                            <input type="text" id="custom-category-text" placeholder="e.g. Education, Health, Finance..." class="flex-1 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 font-medium focus:outline-none focus:border-blue-500 transition-all">
+                            <button onclick="selectCustomCategory()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">
+                                <span data-en="Continue" data-ur="Agay barhein">Continue</span>
+                            </button>
+                            <button onclick="hideOtherCategoryInput()" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all">
+                                <span data-en="Cancel" data-ur="Cancel karein">Cancel</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Sub-Category -->
+            <div id="step-2" class="wizard-step">
+                <div class="flex items-center gap-4 mb-8">
+                    <button onclick="goStep(1)" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-all"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-2xl font-bold display-font" id="step-2-title">Details</h2>
+                </div>
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6"></div>
+            </div>
+
+            <!-- Step 3: Base Input + Follow-up Questions -->
+            <div id="step-3" class="wizard-step">
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="goStep(2)" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-all"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-2xl font-bold display-font" id="step-3-title" data-en="Tell us more" data-ur="مزید بتائیں">Tell us more</h2>
+                </div>
+
+                <!-- Base idea input -->
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2" id="base-label" data-en="What's your core idea?" data-ur="آپ کا بنیادی خیال کیا ہے؟">What's your core idea?</label>
+                    <textarea id="base-input" rows="3" class="q-input resize-none"
+                        data-placeholder-en="e.g. I want to write an email asking my boss for a raise..."
+                        data-placeholder-ur="مثال: میں اپنے باس سے تنخواہ بڑھانے کی ای میل لکھنا چاہتا ہوں..."
+                        placeholder="e.g. I want to write an email asking my boss for a raise..."></textarea>
+                </div>
+
+                <!-- Dynamic follow-up questions -->
+                <div id="questions-container" class="space-y-5 mb-8"></div>
+
+                <button onclick="buildPrompt()" id="build-btn" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-95 shadow-xl shadow-blue-500/30 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span data-en="Generate My Magic" data-ur="میرا جادو تیار کریں">Generate My Prompt</span>
+                </button>
+            </div>
+
+            <!-- Step 4: Loading -->
+            <div id="step-4" class="wizard-step text-center py-12">
+                <div class="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+                <h2 class="text-2xl font-bold display-font mb-2" data-en="Brewing Your Magic..." data-ur="آپ کا جادو تیار ہو رہا ہے...">Brewing Your Magic...</h2>
+                <p class="text-slate-400 font-medium" data-en="Just a second, we're crafting the perfect instruction." data-ur="بس ایک سیکنڈ، ہم بہترین ہدایت تیار کر رہے ہیں۔">Just a second, we're crafting the perfect prompt.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        let selection = { category: '', subCategory: '', subPrompt: '', icon: '' };
+
+        const subCategories = {
+            writing: [
+                { id:'email', en:'Professional Email', ur:'پیشہ ورانہ ای میل', prompt:'Write a professional email about ' },
+                { id:'story', en:'Short Story', ur:'مختصر کہانی', prompt:'Create a captivating short story about ' },
+                { id:'article', en:'In-depth Article', ur:'تفصیلی مضمون', prompt:'Write a comprehensive article on ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Write about ' }
+            ],
+            image: [
+                { id:'portrait', en:'Realistic Portrait', ur:'حقیقت پسندانہ پورٹریٹ', prompt:'Create a highly detailed realistic portrait of ' },
+                { id:'landscape', en:'Nature Landscape', ur:'قدرتی منظر', prompt:'Generate a stunning nature landscape featuring ' },
+                { id:'abstract', en:'Abstract Art', ur:'تجریدی آرٹ', prompt:'Design a modern abstract art piece inspired by ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Create an image featuring ' }
+            ],
+            code: [
+                { id:'react', en:'React Component', ur:'React کمپوننٹ', prompt:'Build a clean React component for ' },
+                { id:'api', en:'API Integration', ur:'API انٹیگریشن', prompt:'Write a Node.js script to integrate an API for ' },
+                { id:'debug', en:'Bug Fixing', ur:'بگ فکسنگ', prompt:'Help me debug this code snippet related to ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Write code for ' }
+            ],
+            business: [
+                { id:'pitch', en:'Elevator Pitch', ur:'ایلویٹر پچ', prompt:'Craft a compelling elevator pitch for ' },
+                { id:'strategy', en:'Business Strategy', ur:'کاروباری حکمت عملی', prompt:'Develop a growth strategy for a business in ' },
+                { id:'report', en:'Financial Report', ur:'مالیاتی رپورٹ', prompt:'Structure a professional financial report for ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Create business content about ' }
+            ],
+            marketing: [
+                { id:'ads', en:'Ad Copy', ur:'اشتہار کا متن', prompt:'Create high-converting ad copy for ' },
+                { id:'seo', en:'SEO Keywords', ur:'SEO کلیدی الفاظ', prompt:'Find the best SEO keywords and meta descriptions for ' },
+                { id:'campaign', en:'Email Campaign', ur:'ای میل مہم', prompt:'Design a sequence of 5 marketing emails for ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Create marketing content for ' }
+            ],
+            social: [
+                { id:'insta', en:'Instagram Caption', ur:'انسٹاگرام کیپشن', prompt:'Write a catchy Instagram caption for ' },
+                { id:'linked', en:'LinkedIn Post', ur:'لنکڈ ان پوسٹ', prompt:'Craft a professional thought-leadership post for ' },
+                { id:'tweet', en:'X (Twitter) Thread', ur:'X (ٹویٹر) تھریڈ', prompt:'Create an engaging thread of 5 tweets about ' },
+                { id:'other', en:'Other', ur:'دیگر', prompt:'Create a social media post about ' }
+            ]
+        };
+
+        // Follow-up questions per category
+        const followUpQuestions = {
+            other: [
+                { en:'Who is the target audience?', ur:'ہدف کون ہے؟', options_en:['General audience','Professionals','Students','Kids'], options_ur:['عام سامعین','پیشہ ور','طلبہ','بچے'] },
+                { en:'What is the primary goal?', ur:'بنیادی مقصد کیا ہے؟', options_en:['Inform','Persuade','Entertain','Educate'], options_ur:['معلومات دینا','قائل کرنا','تفریح','تعلیم دینا'] },
+                { en:'What is the preferred tone?', ur:'پسندیدہ لہجہ کیا ہے؟', options_en:['Professional','Casual','Humorous','Formal'], options_ur:['پیشہ ورانہ','عام','مزاحیہ','رسمی'] }
+            ],
+            writing: [
+                { en:'Who is the target audience?', ur:'ہدف کون ہے؟', options_en:['Manager or boss','Client','Blog readers','Students','General audience'], options_ur:['مینیجر یا باس','کلائنٹ','بلاگ قارئین','طلبہ','عام سامعین'] },
+                { en:'What tone do you prefer?', ur:'آپ کا پسندیدہ لہجہ؟', options_en:['Formal','Friendly','Persuasive','Professional','Casual'], options_ur:['رسمی','دوستانہ','قائل کرنے والا','پیشہ ورانہ','عام'] },
+                { en:'Any key points to include?', ur:'کوئی اہم نکات شامل کریں؟', options_en:['Deadline and urgency','Benefits and outcomes','Clear call to action','Data or proof points','Step-by-step plan'], options_ur:['ڈیڈ لائن اور فوری ضرورت','فوائد اور نتائج','واضح کال ٹو ایکشن','ڈیٹا یا ثبوت','مرحلہ وار منصوبہ'] }
+            ],
+            image: [
+                { en:'Describe the visual style', ur:'بصری انداز بیان کریں', options_en:['Photorealistic','Watercolor','Anime','Cinematic','3D Render','Digital Art','Minimalist'], options_ur:['حقیقت پسندانہ','واٹر کلر','اینیمی','سینیمیٹک','3D رینڈر','ڈیجیٹل آرٹ','منیملسٹ'] },
+                { en:'What mood or atmosphere?', ur:'کیسا ماحول یا موڈ؟', options_en:['Dreamy','Dark','Vibrant','Peaceful','Futuristic','Mystical','Warm and cozy'], options_ur:['خوابیدہ','تاریک','جاندار','پرسکون','مستقبل نما','پراسرار','گرم اور آرام دہ'] },
+                { en:'Any specific details?', ur:'کوئی مخصوص تفصیلات؟', options_en:['Golden hour lighting','8K ultra detail','Soft depth of field','Dramatic shadows','Symmetrical composition','High contrast colors'], options_ur:['سنہری روشنی','8K اعلیٰ معیار','نرم ڈیپتھ آف فیلڈ','ڈرامائی سائے','متوازن کمپوزیشن','ہائی کانٹراسٹ رنگ'] }
+            ],
+            code: [
+                { en:'Which language/framework?', ur:'کون سی زبان/فریم ورک؟', options_en:['JavaScript (Node.js)','React','Python','TypeScript','Express.js','PHP (Laravel)','Java (Spring Boot)'], options_ur:['JavaScript (Node.js)','React','Python','TypeScript','Express.js','PHP (Laravel)','Java (Spring Boot)'] },
+                { en:'What functionality is needed?', ur:'کیا فنکشنلٹی چاہیے؟', options_en:['User authentication','REST API endpoint','CRUD dashboard','Data table with search','File upload','Payment integration'], options_ur:['یوزر تصدیق','REST API اینڈپوائنٹ','CRUD ڈیش بورڈ','سرچ والا ڈیٹا ٹیبل','فائل اپلوڈ','پیمنٹ انٹیگریشن'] },
+                { en:'Any constraints or requirements?', ur:'کوئی شرائط یا تقاضے؟', options_en:['Use TypeScript','Include validation','Follow clean architecture','Add tests','Optimize performance','Secure against common attacks'], options_ur:['TypeScript استعمال کریں','ویلڈیشن شامل کریں','کلین آرکیٹیکچر فالو کریں','ٹیسٹ شامل کریں','کارکردگی بہتر بنائیں','عام حملوں سے محفوظ کریں'] }
+            ],
+            business: [
+                { en:'What is the business/product?', ur:'کاروبار/پروڈکٹ کیا ہے؟', options_en:['SaaS product','E-commerce brand','Mobile app','Consulting service','Education platform','Health and wellness brand'], options_ur:['SaaS پروڈکٹ','ای کامرس برانڈ','موبائل ایپ','کنسلٹنگ سروس','تعلیمی پلیٹ فارم','صحت و فلاح برانڈ'] },
+                { en:'Who is the target market?', ur:'ہدف مارکیٹ کون ہے؟', options_en:['Small businesses','Startups','Enterprises','Students','Parents','Freelancers'], options_ur:['چھوٹے کاروبار','اسٹارٹ اپس','انٹرپرائزز','طلبہ','والدین','فری لانسرز'] },
+                { en:'What is the goal?', ur:'مقصد کیا ہے؟', options_en:['Increase revenue','Raise funding','Improve retention','Expand to new market','Launch new product','Reduce costs'], options_ur:['آمدنی بڑھانا','فنڈنگ حاصل کرنا','کسٹمر برقرار رکھنا','نئی مارکیٹ میں جانا','نیا پروڈکٹ لانچ کرنا','لاگت کم کرنا'] }
+            ],
+            marketing: [
+                { en:'What product/service?', ur:'کون سا پروڈکٹ/سروس؟', options_en:['Mobile app','Online course','Fashion brand','AI tool','Fitness service','Local business'], options_ur:['موبائل ایپ','آن لائن کورس','فیشن برانڈ','AI ٹول','فٹنس سروس','مقامی کاروبار'] },
+                { en:'Target audience?', ur:'ہدف سامعین؟', options_en:['Gen Z','Millennials','Working professionals','Small business owners','Tech enthusiasts','Students'], options_ur:['Gen Z','ملینیئلز','کام کرنے والے پروفیشنلز','چھوٹے کاروباری مالکان','ٹیک شائقین','طلبہ'] },
+                { en:'Platform or channel?', ur:'پلیٹ فارم یا چینل؟', options_en:['Instagram','Facebook','Google Ads','Email','LinkedIn','YouTube'], options_ur:['انسٹاگرام','فیس بک','گوگل ایڈز','ای میل','لنکڈ اِن','یوٹیوب'] }
+            ],
+            social: [
+                { en:'Which platform?', ur:'کون سا پلیٹ فارم؟', options_en:['Instagram','LinkedIn','X (Twitter)','TikTok','YouTube','Facebook'], options_ur:['انسٹاگرام','لنکڈ اِن','X (ٹویٹر)','ٹک ٹاک','یوٹیوب','فیس بک'] },
+                { en:'What is the topic/niche?', ur:'موضوع/مقام کیا ہے؟', options_en:['Technology','Fitness','Food','Travel','Education','Motivation'], options_ur:['ٹیکنالوجی','فٹنس','کھانا','سفر','تعلیم','حوصلہ افزائی'] },
+                { en:'Desired engagement style?', ur:'مطلوبہ انداز؟', options_en:['Funny','Inspirational','Educational','Storytelling','Bold and controversial','Minimal and classy'], options_ur:['مزاحیہ','حوصلہ افزا','تعلیمی','کہانی انداز','جرات مندانہ','سادہ اور نفیس'] }
+            ]
+        };
+
+        function getLang() { return localStorage.getItem('preferred_lang') || 'en'; }
+        function isUrdu() { return getLang() === 'ur'; }
+
+        function goStep(n) {
+            currentStep = n;
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-' + n).classList.add('active');
+            document.getElementById('progress').style.width = (n * 25) + '%';
+
+            const stepEn = 'Step ' + n + ' of 4';
+            const stepUr = 'مرحلہ ' + n + ' از 4';
+            const lbl = document.getElementById('step-label');
+            lbl.setAttribute('data-en', stepEn);
+            lbl.setAttribute('data-ur', stepUr);
+            lbl.innerText = isUrdu() ? stepUr : stepEn;
+
+            // Update title per step
+            const titles = {
+                1: { en: 'What are we creating today?', ur: 'آج ہم کیا تخلیق کر رہے ہیں؟' },
+                2: { en: 'Pick your format', ur: 'اپنا فارمیٹ منتخب کریں' },
+                3: { en: 'Tell us the details', ur: 'تفصیلات بتائیں' },
+                4: { en: 'Brewing Your Magic...', ur: 'آپ کا جادو تیار ہو رہا ہے...' }
+            };
+            const t = titles[n];
+            const mt = document.getElementById('main-title');
+            mt.setAttribute('data-en', t.en);
+            mt.setAttribute('data-ur', t.ur);
+            mt.innerText = isUrdu() ? t.ur : t.en;
+
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+        }
+
+        function selectCategory(cat, icon) {
+            selection.category = cat;
+            selection.icon = icon;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            const ur = isUrdu();
+
+            subCategories[cat].forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'option-card bg-slate-50/50 p-8 rounded-3xl flex items-center justify-between group';
+                card.onclick = () => selectSubCategory(sub);
+                const label = ur ? sub.ur : sub.en;
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-500">
+                            <i class="fa-solid ${icon}"></i>
+                        </div>
+                        <span class="font-bold display-font text-lg">${label}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('step-2-title').innerText = cat.charAt(0).toUpperCase() + cat.slice(1);
+            goStep(2);
+        }
+
+        function selectSubCategory(sub) {
+            selection.subCategory = sub.id;
+            selection.subPrompt = sub.prompt;
+
+            // Render follow-up questions for this category
+            const questions = followUpQuestions[selection.category] || [];
+            const qContainer = document.getElementById('questions-container');
+            const ur = isUrdu();
+
+            qContainer.innerHTML = questions.map((q, i) => {
+                const options = ur ? (q.options_ur || []) : (q.options_en || []);
+                const defaultText = ur ? 'You must select an option' : 'Select an option';
+                const otherText = ur ? 'دیگر' : 'Other';
+                const optionTags = [...options, otherText].map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                return `
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">${ur ? q.ur : q.en}</label>
+                        <select id="q-${i}" class="q-input" onchange="handleOtherOption(${i}, this.value)">
+                            <option value="">${defaultText}</option>
+                            ${optionTags}
+                        </select>
+                        <div id="other-input-${i}" class="mt-2 hidden">
+                            <input type="text" id="other-text-${i}" placeholder="${ur ? 'Please specify' : 'Please specify'}" class="q-input" onblur="updateOtherValue(${i})">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update placeholder for base input
+            const baseInput = document.getElementById('base-input');
+            if (baseInput.hasAttribute('data-placeholder-en')) {
+                baseInput.placeholder = ur ? baseInput.getAttribute('data-placeholder-ur') : baseInput.getAttribute('data-placeholder-en');
+            }
+
+            goStep(3);
+            document.getElementById('base-input').focus();
+        }
+
+        function showOtherCategoryInput() {
+            document.getElementById('custom-category-input').classList.remove('hidden');
+            document.getElementById('custom-category-text').focus();
+        }
+
+        function hideOtherCategoryInput() {
+            document.getElementById('custom-category-input').classList.add('hidden');
+            document.getElementById('custom-category-text').value = '';
+        }
+
+        function selectCustomCategory() {
+            const customCategory = document.getElementById('custom-category-text').value.trim();
+            if (!customCategory) {
+                document.getElementById('custom-category-text').style.borderColor = '#ef4444';
+                document.getElementById('custom-category-text').focus();
+                setTimeout(() => document.getElementById('custom-category-text').style.borderColor = '', 2000);
+                return;
+            }
+            
+            // Create a custom category entry
+            selection.category = 'other';
+            selection.customCategory = customCategory;
+            selection.icon = 'fa-ellipsis-h';
+            
+            // Skip to step 3 since we don't have predefined subcategories for custom
+            goStep(3);
+            
+            // Update the title for custom category
+            const ur = isUrdu();
+            document.getElementById('step-3-title').innerText = customCategory;
+            
+            // Render follow-up questions for custom category
+            const questions = followUpQuestions['other'] || [];
+            const qContainer = document.getElementById('questions-container');
+            const ur = isUrdu();
+
+            qContainer.innerHTML = questions.map((q, i) => {
+                const options = ur ? (q.options_ur || []) : (q.options_en || []);
+                const defaultText = ur ? 'You must select an option' : 'Select an option';
+                const otherText = ur ? 'دیگر' : 'Other';
+                const optionTags = [...options, otherText].map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                return `
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">${ur ? q.ur : q.en}</label>
+                        <select id="q-${i}" class="q-input" onchange="handleOtherOption(${i}, this.value)">
+                            <option value="">${defaultText}</option>
+                            ${optionTags}
+                        </select>
+                        <div id="other-input-${i}" class="mt-2 hidden">
+                            <input type="text" id="other-text-${i}" placeholder="${ur ? 'Please specify' : 'Please specify'}" class="q-input" onblur="updateOtherValue(${i})">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Focus on the base input
+            document.getElementById('base-input').focus();
+        }
+
+        function handleOtherOption(questionIndex, value) {
+            const otherInputDiv = document.getElementById('other-input-' + questionIndex);
+            const selectElement = document.getElementById('q-' + questionIndex);
+            
+            if (value === 'Other' || value === 'دیگر') {
+                otherInputDiv.classList.remove('hidden');
+                document.getElementById('other-text-' + questionIndex).focus();
+            } else {
+                otherInputDiv.classList.add('hidden');
+                document.getElementById('other-text-' + questionIndex).value = '';
+            }
+        }
+
+        function updateOtherValue(questionIndex) {
+            // Replaced logic to extract 'other' value at build time
+        }
+
+        function buildPrompt() {
+            const baseIdea = document.getElementById('base-input').value.trim();
+            if (!baseIdea) {
+                document.getElementById('base-input').style.borderColor = '#ef4444';
+                document.getElementById('base-input').focus();
+                setTimeout(() => document.getElementById('base-input').style.borderColor = '', 2000);
+                return;
+            }
+
+            // Collect follow-up answers
+            const questions = followUpQuestions[selection.category] || [];
+            const answers = questions.map((q, i) => {
+                let val = document.getElementById('q-' + i)?.value.trim() || '';
+                if (val === 'Other' || val === 'دیگر') {
+                    val = document.getElementById('other-text-' + i)?.value.trim() || '';
+                }
+                return { question: isUrdu() ? q.ur : q.en, answer: val };
+            }).filter(a => a.answer);
+
+            // Build the final prompt
+            let fullPrompt;
+            
+            if (selection.category === 'other' && selection.customCategory) {
+                // Handle custom category
+                fullPrompt = `Create a prompt for ${selection.customCategory}: ${baseIdea}`;
+                
+                // Add category context
+                fullPrompt += '\n\nCategory: ' + selection.customCategory;
+                
+                if (answers.length > 0) {
+                    fullPrompt += '\n\nAdditional context:';
+                    answers.forEach(a => {
+                        fullPrompt += '\n- ' + a.question + ': ' + a.answer;
+                    });
+                }
+            } else {
+                // Handle predefined categories
+                fullPrompt = selection.subPrompt + baseIdea;
+
+                if (answers.length > 0) {
+                    fullPrompt += '\n\nAdditional context:';
+                    answers.forEach(a => {
+                        fullPrompt += '\n- ' + a.question + ': ' + a.answer;
+                    });
+                }
+            }
+
+            goStep(4);
+
+            // Save to session and navigate to enhance screen
+            setTimeout(() => {
+                sessionStorage.setItem('prefilled_prompt', fullPrompt);
+                // Also save the category and tone for pre-filling in enhance creation
+                if (selection.category === 'other' && selection.customCategory) {
+                    sessionStorage.setItem('prefilled_type', selection.customCategory);
+                } else {
+                    sessionStorage.setItem('prefilled_type', selection.category);
+                }
+                window.location.href = '/user/enhance-creation';
+            }, 1500);
+        }
+
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+        }
+
+        window.onload = applyLang;
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif']}}}}</script>
+    <style>
+        body { background: #fcfcfd; font-family: 'Inter', sans-serif; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .demo-banner {
+            background-image: repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, #f59e0b 10px, #f59e0b 20px);
+            color: #fff;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <!-- Demo Banner -->
+    <div class="demo-banner w-full py-2 text-center font-bold text-sm tracking-wide shadow-sm">
+        <i class="fa-solid fa-triangle-exclamation mr-2"></i> DEMONSTRATION MODE - NO REAL PAYMENTS WILL BE PROCESSED
+    </div>
+
+    <div class="flex-1 flex items-center justify-center p-6">
+        <div class="w-full max-w-4xl bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col md:flex-row">
+            
+            <!-- Order Summary Sidebar -->
+            <div class="w-full md:w-1/3 bg-slate-50 p-8 border-r border-slate-100">
+                <div class="mb-8">
+                    <a href="/" class="flex items-center gap-2 mb-8">
+                        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-wand-magic-sparkles text-white text-sm"></i>
+                        </div>
+                        <span class="font-bold text-xl display-font text-slate-800">Neuro<span class="text-blue-600">Magic</span></span>
+                    </a>
+                </div>
+                
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Order Summary</h3>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-slate-800 text-lg capitalize"><%= plan.name %> Plan</span>
+                        <span class="font-bold text-slate-800 text-lg">$<%= (plan.unitAmountCents / 100).toFixed(2) %></span>
+                    </div>
+                    <div class="text-sm text-slate-500 mb-4">Billed monthly</div>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <span>Access to all premium features</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <span>Unlimited magic generations</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-between items-center font-bold text-slate-800 text-xl pt-4 border-t border-slate-200">
+                    <span>Total</span>
+                    <span>$<%= (plan.unitAmountCents / 100).toFixed(2) %></span>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div class="w-full md:w-2/3 p-8 md:p-10">
+                <h2 class="text-2xl font-bold display-font text-slate-800 mb-2">Complete your upgrade</h2>
+                <p class="text-slate-500 mb-8">Please enter your payment details below to activate your <%= plan.name %> subscription.</p>
+
+                <form id="demo-checkout-form" class="space-y-6">
+                    <input type="hidden" id="planCode" value="<%= plan.code %>">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                        <input type="email" value="user@example.com" class="input-field bg-slate-50" readonly>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Card Information</label>
+                        <div class="relative">
+                            <i class="fa-regular fa-credit-card absolute left-3 top-3 text-slate-400"></i>
+                            <input type="text" placeholder="4242 4242 4242 4242" class="input-field pl-10 mb-3 font-mono" maxlength="19" required>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <input type="text" placeholder="MM / YY" class="input-field font-mono text-center" maxlength="5" required>
+                            </div>
+                            <div class="flex-1">
+                                <input type="text" placeholder="CVC" class="input-field font-mono text-center" maxlength="4" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Name on card</label>
+                        <input type="text" placeholder="Jane Doe" class="input-field" required>
+                    </div>
+
+                    <div class="pt-4 flex gap-4">
+                        <button type="button" onclick="window.location.href='/user/plans?checkout=cancelled'" class="flex-1 py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-all text-center">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submit-btn" class="flex-[2] py-3 px-4 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20">
+                            <span>Subscribe</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div id="error-msg" class="hidden p-3 rounded-lg bg-red-50 text-red-600 text-sm mt-4 font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="error-text">Payment failed. Please try again.</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('demo-checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const errorDiv = document.getElementById('error-msg');
+            const planCode = document.getElementById('planCode').value;
+
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // Simulate network delay for realism
+            await new Promise(r => setTimeout(r, 1500));
+
+            try {
+                const response = await fetch('/billing/demo-checkout-complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: planCode })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Success!';
+                    btn.classList.replace('bg-blue-600', 'bg-green-500');
+                    btn.classList.replace('hover:bg-blue-700', 'hover:bg-green-600');
+                    setTimeout(() => {
+                        window.location.href = data.url;
+                    }, 500);
+                } else {
+                    throw new Error(data.error || 'Failed to process payment');
+                }
+            } catch (err) {
+                errorDiv.classList.remove('hidden');
+                document.getElementById('error-text').textContent = err.message || 'Payment failed. Please try again.';
+                btn.disabled = false;
+                btn.innerHTML = '<span>Subscribe</span><i class="fa-solid fa-arrow-right"></i>';
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+    </script>
+</body>
+</html>

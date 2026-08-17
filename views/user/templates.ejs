@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Library | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif'],urdu:['Jameel Noori Nastaleeq','sans-serif']}}}}</script>
+    <style>
+        body { background: #f5f7fb; font-family: 'Inter', sans-serif; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .soft-card { border: 1px solid #e5eaf2; background: #fff; border-radius: 14px; }
+        .chip { border: 1px solid #e5eaf2; background: #fff; border-radius: 999px; }
+        .chip.active { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+        .template-card { transition: all 0.2s ease; }
+        .template-card:hover { border-color: #bfdbfe; box-shadow: 0 12px 28px rgba(37,99,235,.08); transform: translateY(-2px); }
+        .popular-card { min-height: 170px; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        #preview-modal { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.45); backdrop-filter: blur(3px); z-index: 2000; align-items: center; justify-content: center; padding: 18px; }
+        #preview-modal.show { display: flex; }
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.1rem !important; text-align: right !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; }
+        [dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3,[dir="rtl"] h4,[dir="rtl"] p,[dir="rtl"] span,[dir="rtl"] input,[dir="rtl"] button { font-family: 'Jameel Noori Nastaleeq', serif !important; text-align: right !important; }
+    </style>
+    
+</head>
+<body class="antialiased text-slate-900">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen px-4 md:px-8 py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-6">
+                <h1 class="text-2xl md:text-3xl font-extrabold display-font tracking-tight" data-en="Template Library" data-ur="ٹیمپلیٹ لائبریری">Template Library</h1>
+                <p class="text-slate-500 text-sm mt-1 font-medium" data-en="Pre-built prompts for common use cases. Customize and use instantly." data-ur="عام استعمال کے لیے پہلے سے تیار پرامپٹس۔ فوری استعمال کے لیے حسبِ ضرورت بنائیں۔">Pre-built prompts for common use cases. Customize and use instantly.</p>
+            </div>
+
+            <div class="soft-card p-3 md:p-4 mb-6">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input id="search-box" type="text" class="w-full border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400" data-placeholder-en="Search templates by name or description..." data-placeholder-ur="نام یا تفصیل سے ٹیمپلیٹس تلاش کریں..." placeholder="Search templates by name or description...">
+                </div>
+            </div>
+
+            <section class="mb-7">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fa-solid fa-star text-amber-500 text-xs"></i>
+                    <h2 class="font-extrabold text-sm text-slate-800" data-en="Most Popular" data-ur="سب سے مقبول">Most Popular</h2>
+                </div>
+                <div id="popular-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3"></div>
+            </section>
+
+            <section>
+                <h2 class="font-extrabold text-base text-slate-800 mb-3" data-en="All Templates" data-ur="تمام ٹیمپلیٹس">All Templates</h2>
+                <div id="category-chips" class="flex items-center gap-2 flex-wrap mb-4"></div>
+                <div id="all-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+            </section>
+        </div>
+    </main>
+
+    <div id="preview-modal" onclick="if(event.target===this)closePreview()">
+        <div class="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h3 id="preview-title" class="text-lg font-extrabold text-slate-900">Template Preview</h3>
+                    <p id="preview-meta" class="text-xs text-slate-500 font-semibold mt-1">Category</p>
+                </div>
+                <button onclick="closePreview()" class="w-9 h-9 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="preview-description" class="text-sm text-slate-600 mt-3"></p>
+            <div class="mt-4">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Prompt</p>
+                <div id="preview-prompt" class="soft-card p-3 text-sm text-slate-700 leading-6 whitespace-pre-wrap"></div>
+            </div>
+            <div class="mt-4 flex items-center justify-end gap-2">
+                <button onclick="closePreview()" class="px-4 py-2 text-sm font-bold rounded-xl border border-slate-200 text-slate-600">Close</button>
+                <button id="preview-use-btn" class="px-4 py-2 text-sm font-bold rounded-xl bg-blue-600 hover:bg-blue-700 text-white">Use Template</button>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <script>
+        const templateData = [
+            { id:'debug-js', title:'Debug JavaScript Function', titleUr:'جاوا اسکرپٹ فنکشن ڈیبگ', category:'Coding', categoryUr:'کوڈنگ', popularity:95, icon:'fa-code', color:'text-blue-600 bg-blue-50', desc:'Find and fix bugs in JavaScript code with edge-case handling.', descUr:'جاوا اسکرپٹ کوڈ میں بگز تلاش کریں اور درست کریں۔', prompt:'You are a senior JavaScript debugger. Analyze the given function, identify root-cause bugs, and provide: (1) fixed code, (2) what was wrong, (3) edge cases covered, (4) quick test cases.', type:'code', tone:'technical' },
+            { id:'social-campaign', title:'Social Media Campaign', titleUr:'سوشل میڈیا مہم', category:'Marketing', categoryUr:'مارکیٹنگ', popularity:91, icon:'fa-bullhorn', color:'text-indigo-600 bg-indigo-50', desc:'Plan engaging social media content across platforms.', descUr:'مختلف پلیٹ فارمز کے لیے مؤثر سوشل میڈیا مواد بنائیں۔', prompt:'Create a 14-day social media campaign for [brand]. Include platform-wise content ideas, hooks, captions, CTA, and posting schedule. Tone should match audience persona.', type:'writing', tone:'persuasive' },
+            { id:'blog-intro', title:'Blog Introduction Writer', titleUr:'بلاگ تعارف لکھیں', category:'Marketing', categoryUr:'مارکیٹنگ', popularity:89, icon:'fa-pen-nib', color:'text-emerald-600 bg-emerald-50', desc:'Create engaging blog intros with clear CTA for SaaS products.', descUr:'SaaS پراڈکٹس کے لیے مؤثر بلاگ تعارف بنائیں۔', prompt:'Write 5 high-converting introductions for a SaaS blog on [topic]. Each intro must include a hook, pain point, and smooth transition to the main section.', type:'writing', tone:'professional' },
+            { id:'api-doc', title:'API Documentation Generator', titleUr:'API دستاویزات جنریٹر', category:'Coding', categoryUr:'کوڈنگ', popularity:82, icon:'fa-file-code', color:'text-cyan-600 bg-cyan-50', desc:'Create clear API documentation from code examples.', descUr:'کوڈ سے واضح API ڈاکیومنٹیشن بنائیں۔', prompt:'Generate API docs from this endpoint code. Include endpoint summary, auth, request params, sample request/response, status codes, and error scenarios.', type:'code', tone:'technical' },
+            { id:'research-summary', title:'Research Paper Summarizer', titleUr:'ریسرچ پیپر خلاصہ', category:'Research', categoryUr:'تحقیق', popularity:80, icon:'fa-flask', color:'text-violet-600 bg-violet-50', desc:'Condense papers into concise bullet summaries.', descUr:'پیپرز کو مختصر اور واضح نکات میں سمیٹیں۔', prompt:'Summarize this research paper with: problem statement, method, results, limitations, and practical implications in plain language.', type:'research', tone:'academic' },
+            { id:'sql-opt', title:'SQL Query Optimizer', titleUr:'SQL کوئری بہتر بنائیں', category:'Coding', categoryUr:'کوڈنگ', popularity:87, icon:'fa-database', color:'text-sky-600 bg-sky-50', desc:'Optimize complex SQL queries for better performance.', descUr:'SQL کوئریز کی کارکردگی بہتر بنائیں۔', prompt:'Optimize this SQL query for performance. Provide improved query, indexing suggestions, and explain expected gains.', type:'code', tone:'technical' },
+            { id:'lesson-plan', title:'Lesson Plan Generator', titleUr:'سبق منصوبہ ساز', category:'Education', categoryUr:'تعلیم', popularity:78, icon:'fa-graduation-cap', color:'text-teal-600 bg-teal-50', desc:'Create structured lesson plans with activities.', descUr:'سرگرمیوں کے ساتھ منظم سبق پلان بنائیں۔', prompt:'Create a 60-minute lesson plan for [grade level] on [topic], with objectives, activities, assessment, and homework.', type:'planning', tone:'professional' },
+            { id:'legal-review', title:'Legal Contract Reviewer', titleUr:'قانونی معاہدہ جائزہ', category:'Legal', categoryUr:'قانونی', popularity:76, icon:'fa-scale-balanced', color:'text-rose-600 bg-rose-50', desc:'Review contracts and highlight key terms and risks.', descUr:'معاہدوں کے اہم نکات اور خطرات واضح کریں۔', prompt:'Review this contract and highlight risky clauses, missing protections, negotiation points, and a plain-language summary.', type:'research', tone:'professional' }
+        ];
+
+        const categories = ['All Templates', ...new Set(templateData.map(t => t.category))];
+        let activeCategory = 'All Templates';
+        let searchTerm = '';
+        let selectedTemplate = null;
+
+        function toUrCategory(name) {
+            const map = { 'All Templates':'تمام ٹیمپلیٹس', Coding:'کوڈنگ', Marketing:'مارکیٹنگ', Research:'تحقیق', Education:'تعلیم', Legal:'قانونی' };
+            return map[name] || name;
+        }
+
+        function isUrdu() {
+            return (localStorage.getItem('preferred_lang') || 'en') === 'ur';
+        }
+
+        function filteredTemplates() {
+            return templateData.filter(t => {
+                const byCategory = activeCategory === 'All Templates' || t.category === activeCategory;
+                const q = searchTerm.trim().toLowerCase();
+                const bySearch = !q || `${t.title} ${t.desc} ${t.category}`.toLowerCase().includes(q);
+                return byCategory && bySearch;
+            });
+        }
+
+        function renderChips() {
+            const wrap = document.getElementById('category-chips');
+            const ur = isUrdu();
+            wrap.innerHTML = categories.map(c => `
+                <button class="chip px-3 py-1.5 text-xs font-bold ${activeCategory===c?'active text-blue-700':'text-slate-500'}"
+                    onclick="setCategory('${c.replace(/'/g, "\\'")}')">${ur ? toUrCategory(c) : c}</button>
+            `).join('');
+        }
+
+        function popularCard(t) {
+            const ur = isUrdu();
+            return `
+                <div class="popular-card soft-card p-3 template-card">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-lg ${t.color} flex items-center justify-center text-sm"><i class="fa-solid ${t.icon}"></i></div>
+                        <span class="text-[10px] font-bold text-slate-400">↗ ${t.popularity}%</span>
+                    </div>
+                    <h3 class="font-extrabold text-sm text-slate-900 mb-1">${ur ? t.titleUr : t.title}</h3>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-3">${ur ? t.descUr : t.desc}</p>
+                    <div class="flex items-center gap-2">
+                        <button onclick="previewTemplate('${t.id}')" class="flex-1 h-8 rounded-lg border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-slate-50"><i class="fa-regular fa-eye mr-1"></i>${ur ? 'پری ویو' : 'Preview'}</button>
+                        <button onclick="useTemplate('${t.id}')" class="flex-1 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 text-[11px] font-bold text-white">${ur ? 'استعمال کریں' : 'Use'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function allCard(t) {
+            const ur = isUrdu();
+            return `
+                <div class="soft-card p-4 template-card">
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-9 h-9 rounded-lg ${t.color} flex items-center justify-center text-sm"><i class="fa-solid ${t.icon}"></i></div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="font-extrabold text-sm text-slate-900">${ur ? t.titleUr : t.title}</h3>
+                            <span class="text-[10px] font-bold text-slate-400">${ur ? t.categoryUr : t.category}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 line-clamp-3 mb-3">${ur ? t.descUr : t.desc}</p>
+                    <div class="flex items-center gap-2">
+                        <button onclick="previewTemplate('${t.id}')" class="flex-1 h-8 rounded-lg border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-slate-50"><i class="fa-regular fa-eye mr-1"></i>${ur ? 'پری ویو' : 'Preview'}</button>
+                        <button onclick="useTemplate('${t.id}')" class="flex-1 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 text-[11px] font-bold text-white">${ur ? 'استعمال کریں' : 'Use'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPopular() {
+            const grid = document.getElementById('popular-grid');
+            const popular = [...templateData].sort((a,b) => b.popularity - a.popularity).slice(0,4);
+            grid.innerHTML = popular.map(popularCard).join('');
+        }
+
+        function renderAllTemplates() {
+            const grid = document.getElementById('all-grid');
+            const data = filteredTemplates();
+            if (!data.length) {
+                const ur = isUrdu();
+                grid.innerHTML = `<div class="soft-card p-6 text-sm font-semibold text-slate-500 col-span-full text-center">${ur ? 'کوئی ٹیمپلیٹ نہیں ملا۔' : 'No templates found.'}</div>`;
+                return;
+            }
+            grid.innerHTML = data.map(allCard).join('');
+        }
+
+        function setCategory(category) {
+            activeCategory = category;
+            renderChips();
+            renderAllTemplates();
+        }
+
+        function previewTemplate(id) {
+            const t = templateData.find(x => x.id === id);
+            if (!t) return;
+            selectedTemplate = t;
+            const ur = isUrdu();
+            document.getElementById('preview-title').textContent = ur ? t.titleUr : t.title;
+            document.getElementById('preview-meta').textContent = `${ur ? t.categoryUr : t.category} • ${t.popularity}%`;
+            document.getElementById('preview-description').textContent = ur ? t.descUr : t.desc;
+            document.getElementById('preview-prompt').textContent = t.prompt;
+            document.getElementById('preview-use-btn').textContent = ur ? 'استعمال کریں' : 'Use Template';
+            document.getElementById('preview-modal').classList.add('show');
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.remove('show');
+        }
+
+        function useTemplate(id) {
+            const t = templateData.find(x => x.id === id);
+            if (!t) return;
+            sessionStorage.setItem('prefilled_prompt', t.prompt);
+            sessionStorage.setItem('prefilled_type', t.type);
+            sessionStorage.setItem('prefilled_tone', t.tone);
+            window.location.href = '/user/enhance-creation';
+        }
+
+        document.getElementById('preview-use-btn').addEventListener('click', () => {
+            if (!selectedTemplate) return;
+            useTemplate(selectedTemplate.id);
+        });
+
+        function bindSearch() {
+            const input = document.getElementById('search-box');
+            input.addEventListener('input', (e) => {
+                searchTerm = e.target.value || '';
+                renderAllTemplates();
+            });
+        }
+
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+            renderChips();
+            renderPopular();
+            renderAllTemplates();
+            const input = document.getElementById('search-box');
+            if (input) {
+                input.placeholder = isUrdu() ? input.getAttribute('data-placeholder-ur') : input.getAttribute('data-placeholder-en');
+            }
+        }
+
+        window.onload = () => {
+            bindSearch();
+            applyLang();
+        };
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

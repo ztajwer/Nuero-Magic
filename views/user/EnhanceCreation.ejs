@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Magic | NeuroMagic</title>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        urdu: ['Jameel Noori Nastaleeq', 'serif'],
+                    },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a', 950: '#172554' }
+                    },
+                    boxShadow: {
+                        'premium': '0 4px 20px -2px rgba(15, 23, 42, 0.03)',
+                        'premium-hover': '0 20px 40px -4px rgba(15, 23, 42, 0.08)',
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { background: #fcfcfc; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* RTL */
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.15rem !important; text-align: right !important; }
+        [dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select, [dir="rtl"] button { font-family: 'Jameel Noori Nastaleeq', serif !important; text-align: right !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.25rem !important; }
+        [dir="rtl"] .lg\:ml-64 { margin-left: 0 !important; margin-right: 16rem !important; }
+
+        /* Category Pills */
+        .cat-pill { cursor: pointer; transition: all .2s; white-space: nowrap; }
+        .cat-pill.active { background: #0f172a !important; color: #fff !important; border-color: #0f172a !important; }
+
+        /* Creation Cards */
+        .creation-card { background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px; padding: 24px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03); }
+        .creation-card:hover { border-color: rgba(203, 213, 225, 1); box-shadow: 0 20px 40px -4px rgba(15, 23, 42, 0.08); transform: translateY(-4px); }
+
+        /* Input Box */
+        .input-box { background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px; transition: all 0.3s ease; overflow: hidden; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.02); }
+        .input-box:focus-within { border-color: #3b82f6; box-shadow: 0 8px 30px rgba(59,130,246,.12); }
+
+        /* Recording */
+        @keyframes pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239,68,68,.4); } 70%{ box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+        .recording { animation: pulse 1s infinite; background: #ef4444 !important; color: #fff !important; border-color: #ef4444 !important; }
+        #rec-bar { height: 3px; width: 0; background: linear-gradient(90deg, #3b82f6, #a855f7); transition: width .3s; border-radius: 0 0 4px 4px; }
+        #rec-bar.active { width: 100%; animation: recPulse 1.5s ease-in-out infinite alternate; }
+        @keyframes recPulse { from { opacity: 1; } to { opacity: 0.4; } }
+
+        /* Modal */
+        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.65); backdrop-filter: blur(8px); z-index: 1000; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+        #modal-overlay.show { display: flex; }
+        #modal-box { background: #fff; border-radius: 28px; padding: 36px; width: 100%; max-width: 900px; position: relative; margin: auto; animation: popIn .3s cubic-bezier(.16,1,.3,1); }
+        @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Login Modal */
+        #login-modal { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.5); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        #login-modal.show { display: flex; }
+        #login-box { background: #fff; border-radius: 28px; padding: 40px; width: 100%; max-width: 420px; text-align: center; animation: popIn .3s cubic-bezier(.16,1,.3,1); }
+
+        /* Toast */
+        #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0f172a; color: #fff; padding: 14px 24px; border-radius: 100px; font-weight: 700; font-size: 14px; z-index: 9999; transition: all .4s cubic-bezier(.16,1,.3,1); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 20px 40px rgba(0,0,0,.3); }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Provider Buttons */
+        .provider-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 10px; border-radius: 16px; border: 1.5px solid #e2e8f0; background: #f8fafc; cursor: pointer; transition: all .2s; flex: 1; min-width: 70px; }
+        .provider-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.1); }
+        .provider-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+        /* Template cards */
+        .template-card { background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px; padding: 24px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03); }
+        .template-card:hover { border-color: rgba(203, 213, 225, 1); box-shadow: 0 20px 40px -4px rgba(15, 23, 42, 0.08); transform: translateY(-4px); }
+        .template-card.selected { border-color: #3b82f6; background: #eff6ff; }
+
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 26px !important; }
+
+        @media (max-width: 1023px) { body { padding-bottom: 80px; } }
+    </style>
+    
+</head>
+
+<body class="antialiased text-slate-900">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen hero-gradient flex flex-col items-center py-6 lg:py-12 px-6 transition-all duration-300 rtl:ml-0 rtl:lg:mr-64">
+
+        <!-- Mobile Header -->
+        <header class="lg:hidden sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-5 py-4 flex items-center justify-between">
+            <img src="/images/logo.jpeg" alt="Logo" class="w-[120px] h-[60px] rounded-xl object-contain">
+            <div class="flex items-center gap-2">
+                <button onclick="toggleLang()" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg" data-en="EN / اردو" data-ur="اردو / EN">EN / اردو</button>
+                <% if(typeof is_guest !=='undefined' && is_guest) { %>
+                    <button onclick="showLoginNudge()" class="text-xs font-bold text-blue-600 bg-blue-50 px-4 py-1.5 rounded-xl" data-en="Log In" data-ur="لاگ ان">Log In</button>
+                <% } else { %>
+                    <a href="/auth/logout" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl" data-en="Logout" data-ur="لاگ آؤٹ">Logout</a>
+                <% } %>
+            </div>
+        </header>
+
+        <div class="max-w-4xl mx-auto px-5 py-10 lg:py-16">
+
+            <!-- HERO -->
+            <div class="text-center mb-10">
+                <h1 class="text-4xl lg:text-5xl font-extrabold display-font tracking-tight mb-3 leading-tight">
+                    Turn ideas into<br><span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">expert masterpieces</span>
+                </h1>
+                <p class="text-slate-500 font-medium text-lg" data-en="Unleash the power of AI with sophisticated instructions." data-ur="نفیس ہدایات کے ساتھ مصنوعی ذہانت کی طاقت کو بروئے کار لائیں۔">Unleash the power of AI with sophisticated instructions.</p>
+                <div id="plan-badge" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Usage policy active</span>
+                </div>
+            </div>
+
+            <!-- Tab Row + Lang Toggle -->
+            <div class="flex items-center justify-between mb-6 rtl:flex-row-reverse">
+                <div class="flex p-1 bg-slate-100 rounded-2xl gap-1">
+                    <button id="tab-create" onclick="setTab('create')" class="tab-btn px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-slate-900 shadow-sm transition-all">
+                        <i class="fa-solid fa-wand-magic text-blue-500 text-xs"></i>
+                        <span data-en="Create" data-ur="تخلیق">Create</span>
+                    </button>
+                    <button id="tab-template" onclick="setTab('template')" class="tab-btn px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-all">
+                        <i class="fa-solid fa-layer-group text-xs"></i>
+                        <span data-en="Templates" data-ur="خاکے">Templates</span>
+                        <span class="bg-emerald-100 text-emerald-600 text-[10px] px-1.5 py-0.5 rounded-full font-extrabold" data-en="New" data-ur="نیا">New</span>
+                    </button>
+                </div>
+                <div class="hidden lg:flex items-center gap-3">
+                    <a href="/user/generate-prompt" class="text-xs font-bold text-slate-600 bg-white border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-all">Generate Magic</a>
+                    <a href="/user/enhance-creation" class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-4 py-2.5 rounded-xl hover:bg-blue-100 transition-all">Refine Magic</a>
+                    <button onclick="toggleLang()" class="text-xs font-bold text-slate-500 bg-slate-100 px-4 py-2.5 rounded-xl hover:bg-slate-200 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-earth-asia"></i> <span id="lang-label">EN / اردو</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══ CREATION SECTION ═══ -->
+            <div id="create-section">
+                <!-- Settings Row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10" data-en="Category" data-ur="قسم">Category</label>
+                        <select id="creation-type" class="w-full bg-white text-sm font-bold text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-3 transition-all shadow-sm" onchange="handleOtherOption('creation-type', this.value)">
+                            <option value="standard" data-en="Standard" data-ur="معیاری">Standard</option>
+                            <option value="writing" data-en="Writing" data-ur="تحریر">Writing</option>
+                            <option value="research" data-en="Research" data-ur="تحقیق">Research</option>
+                            <option value="planning" data-en="Planning" data-ur="منصوبہ بندی">Planning</option>
+                            <option value="image" data-en="Image" data-ur="تصویر">Image</option>
+                            <option value="video" data-en="Video" data-ur="ویڈیو">Video</option>
+                            <option value="code" data-en="Code" data-ur="کوڈ">Code</option>
+                            <option value="automation" data-en="Automation" data-ur="آٹومیشن">Automation</option>
+                            <option value="Other" data-en="Other" data-ur="دیگر">Other</option>
+                        </select>
+                        <div id="creation-type-other" class="mt-2 hidden">
+                            <input type="text" id="creation-type-text" placeholder="Please specify" class="w-full bg-white text-sm font-medium text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-2 transition-all shadow-sm" onblur="updateOtherValue('creation-type')">
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10" data-en="Tone" data-ur="لہجہ">Tone</label>
+                        <select id="creation-tone" class="w-full bg-white text-sm font-bold text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-3 transition-all shadow-sm" onchange="handleOtherOption('creation-tone', this.value)">
+                            <option value="professional" data-en="Professional" data-ur="پیشہ ورانہ">Professional</option>
+                            <option value="creative" data-en="Creative" data-ur="تخلیقی">Creative</option>
+                            <option value="academic" data-en="Academic" data-ur="علمی">Academic</option>
+                            <option value="friendly" data-en="Friendly" data-ur="دوستانہ">Friendly</option>
+                            <option value="persuasive" data-en="Persuasive" data-ur="قائل کرنے والا">Persuasive</option>
+                            <option value="technical" data-en="Technical" data-ur="تکنیکی">Technical</option>
+                            <option value="Other" data-en="Other" data-ur="دیگر">Other</option>
+                        </select>
+                        <div id="creation-tone-other" class="mt-2 hidden">
+                            <input type="text" id="creation-tone-text" placeholder="Please specify" class="w-full bg-white text-sm font-medium text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-2 transition-all shadow-sm" onblur="updateOtherValue('creation-tone')">
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10" data-en="Level" data-ur="سطح">Level</label>
+                        <select id="creation-level" class="w-full bg-white text-sm font-bold text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-3 transition-all shadow-sm">
+                            <option value="standard" data-en="Standard" data-ur="معیاری">Standard</option>
+                            <option value="detailed" data-en="Detailed" data-ur="تفصیلی">Detailed</option>
+                            <option value="expert" data-en="Expert" data-ur="ماہر">Expert</option>
+                        </select>
+                    </div>
+                    <div class="relative">
+                        <label class="absolute -top-2 left-3 bg-white px-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10" data-en="Provider" data-ur="فراہم کنندہ">Provider</label>
+                        <select id="target-provider" class="w-full bg-white text-sm font-bold text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-3 transition-all shadow-sm">
+                            <option value="none">NeuroMagic AI</option>
+                            <option value="chatgpt">ChatGPT</option>
+                            <option value="claude">Claude</option>
+                            <option value="perplexity">Perplexity</option>
+                            <option value="grok">Grok</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="project-memory-wrap" class="mb-4 bg-white border-2 border-slate-200 rounded-xl p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Project Memory Folder</label>
+                        <span id="project-memory-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Plus only</span>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-2">
+                        <select id="project-select" class="flex-1 bg-white text-sm font-bold text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-3 py-2.5 transition-all shadow-sm">
+                            <option value="">No folder selected</option>
+                        </select>
+                        <input id="project-name-input" type="text" placeholder="New folder name" class="md:w-56 bg-white text-sm font-medium text-slate-700 focus:outline-none border-2 border-slate-200 focus:border-blue-500 rounded-xl px-3 py-2.5 transition-all shadow-sm" />
+                        <button id="project-create-btn" onclick="createProjectFolder()" class="px-4 py-2.5 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-black transition-all">Create</button>
+                    </div>
+                    <p id="project-memory-help" class="mt-2 text-xs text-slate-400 font-medium">Use a folder to remember past questions and answers for this project.</p>
+                </div>
+
+                <!-- Input Box -->
+                <div class="input-box mb-6">
+                    <div id="rec-bar"></div>
+                    <textarea id="ai-input" rows="5"
+                        class="w-full bg-transparent border-none focus:ring-0 text-base px-6 py-5 placeholder:text-slate-300 font-medium resize-none focus:outline-none"
+                        data-placeholder-en="Describe your idea in plain words... (e.g., 'write an email asking for a meeting')"
+                        data-placeholder-ur="اپنا خیال سادہ الفاظ میں لکھیں... (مثال: 'میٹنگ کے لیے ای میل لکھیں')"
+                        placeholder="Describe your idea in plain words..."></textarea>
+
+                    <!-- Toolbar -->
+                    <div class="px-5 pb-4 border-t border-slate-100 pt-3 flex flex-wrap items-center gap-3 justify-between bg-slate-50/50">
+                        <div class="flex items-center gap-2">
+                            <!-- Voice -->
+                            <button id="voice-btn" onclick="handleVoice()" title="Voice Input"
+                                class="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-slate-500 hover:text-red-500 hover:border-red-300 font-bold text-sm transition-all">
+                                <i class="fa-solid fa-microphone"></i>
+                                <span id="voice-label" data-en="Voice" data-ur="آواز">Voice</span>
+                                <span id="voice-lock-badge" class="hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Pro/Plus</span>
+                                <span id="voice-upgrade-btn" onclick="event.stopPropagation(); goToUpgrade();" class="hidden text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer">Upgrade</span>
+                            </button>
+                            <!-- Attach -->
+                            <button id="attach-btn" onclick="handleAttachment()" title="Attach File"
+                                class="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-slate-500 hover:text-blue-500 hover:border-blue-300 font-bold text-sm transition-all">
+                                <i class="fa-solid fa-paperclip"></i>
+                                <span data-en="Attach" data-ur="فائل">Attach</span>
+                                <span id="attach-lock-badge" class="hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Pro/Plus</span>
+                                <span id="attach-upgrade-btn" onclick="event.stopPropagation(); goToUpgrade();" class="hidden text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer">Upgrade</span>
+                            </button>
+                            <input type="file" id="file-input" class="hidden" accept=".txt,.md,.pdf,.docx,.js,.py,.html,.css,.json,.csv" onchange="handleFileSelected(this)">
+                        </div>
+
+                        <button onclick="enhanceCreation()" id="enhance-btn"
+                            class="flex items-center gap-2.5 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-95 shadow-xl shadow-blue-500/30 text-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span id="enhance-label" data-en="Refine Magic" data-ur="جادو سنواریں">Refine Magic</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ TEMPLATE SECTION ═══ -->
+            <div id="template-section" class="hidden mb-8">
+                <h3 class="text-lg font-extrabold display-font mb-1" data-en="Choose an expertly crafted template" data-ur="ماہرانہ خاکہ منتخب کریں">Choose an expertly crafted template</h3>
+                <p class="text-slate-400 text-sm mb-6" data-en="Select one to load it into the editor, then enhance it." data-ur="ایک منتخب کریں، پھر بہتر بنائیں۔">Select one to load it into the editor, then enhance it.</p>
+                <div id="template-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+
+            <!-- ═══ DISCOVER / INSPIRATION ═══ -->
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-extrabold display-font" data-en="Inspiration Library" data-ur="خوبصورت خیالات">Inspiration Library</h2>
+                        <p class="text-slate-400 text-sm font-medium" data-en="Click any card to load it instantly." data-ur="کارڈ پر کلک کریں اور فوری استعمال کریں۔">Click any card to load it instantly.</p>
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs rtl:left-auto rtl:right-3"></i>
+                        <input id="search-input" oninput="renderCards()" type="text"
+                            data-placeholder-en="Search..." data-placeholder-ur="تلاش..."
+                            placeholder="Search..."
+                            class="pl-8 pr-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-all w-36 lg:w-48 rtl:pl-4 rtl:pr-8">
+                    </div>
+                </div>
+
+                <!-- Category Pills -->
+                <div class="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-1">
+                    <button onclick="switchCat(this,'all')" class="cat-pill active px-5 py-2 rounded-full border-2 border-slate-900 bg-slate-900 text-white font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-th-large mr-1.5 text-xs"></i><span data-en="All" data-ur="سب">All</span></button>
+                    <button onclick="switchCat(this,'text')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-file-pen mr-1.5 text-xs"></i><span data-en="Writing" data-ur="تحریر">Writing</span></button>
+                    <button onclick="switchCat(this,'image')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-image mr-1.5 text-xs"></i><span data-en="Image" data-ur="تصویر">Image</span></button>
+                    <button onclick="switchCat(this,'video')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-video mr-1.5 text-xs"></i><span data-en="Video" data-ur="ویڈیو">Video</span></button>
+                    <button onclick="switchCat(this,'audio')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-microphone mr-1.5 text-xs"></i><span data-en="Audio" data-ur="آڈیو">Audio</span></button>
+                    <button onclick="switchCat(this,'business')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-briefcase mr-1.5 text-xs"></i><span data-en="Business" data-ur="کاروبار">Business</span></button>
+                    <button onclick="switchCat(this,'social')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-share-nodes mr-1.5 text-xs"></i><span data-en="Social" data-ur="سوشل">Social</span></button>
+                    <button onclick="switchCat(this,'code')" class="cat-pill px-5 py-2 rounded-full border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm whitespace-nowrap"><i class="fa-solid fa-code mr-1.5 text-xs"></i><span data-en="Code" data-ur="کوڈ">Code</span></button>
+                </div>
+
+                <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+
+                <% if(typeof is_guest==='undefined' || !is_guest) { %>
+                    <div id="history-section" class="mt-16">
+                        <div class="flex items-center justify-between mb-5">
+                            <h3 class="text-xl font-extrabold display-font" data-en="Recent History" data-ur="حالیہ سرگزشت">Recent History</h3>
+                            <a href="/user/history-page" class="text-xs font-bold text-blue-600 hover:underline" data-en="View All" data-ur="سب دیکھیں">View All</a>
+                        </div>
+                        <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <!-- ═══ MAIN RESULT MODAL ═══ -->
+    <div id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div id="modal-box">
+            <button onclick="closeModal()"
+                class="absolute top-5 right-5 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition-all border-0 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Header -->
+            <div class="flex items-center gap-4 mb-6 pr-10">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg shadow-lg shadow-blue-200 flex-shrink-0">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <p id="modal-label" class="text-[10px] font-extrabold text-blue-600 uppercase tracking-[.2em] mb-0.5"></p>
+                    <h3 class="text-xl font-extrabold display-font text-slate-900" data-en="Your Magic Result" data-ur="آپ کا جادوئی نتیجہ">Your Magic Result</h3>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div id="modal-loading" class="hidden flex flex-col items-center py-16 gap-6">
+                <div class="relative">
+                    <div class="w-16 h-16 border-4 border-blue-100 rounded-full"></div>
+                    <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+                </div>
+                <p class="text-slate-500 font-bold animate-pulse" data-en="AI is crafting your masterpiece..." data-ur="AI آپ کا شاہکار بنا رہا ہے...">AI is crafting your masterpiece...</p>
+            </div>
+
+            <!-- Content -->
+            <div id="modal-content">
+                <!-- Clarification UI -->
+                <div id="modal-clarification" class="hidden relative mb-6 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-circle-question text-amber-600 text-sm"></i>
+                        </div>
+                        <p class="text-[11px] font-extrabold text-amber-600 uppercase tracking-wider">More Details Needed</p>
+                    </div>
+                    <div id="modal-dynamic-questions" class="space-y-4 mb-4">
+                        <!-- Dynamic inputs will be injected here -->
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button onclick="submitClarification()" id="clarification-submit-btn" class="px-6 py-2.5 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/30 text-sm flex items-center gap-2">
+                            <span>Continue</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Text -->
+                <div id="modal-result-container" class="relative mb-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 max-h-96 overflow-y-auto">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-file-pen text-slate-500 text-sm"></i>
+                                </div>
+                                <p class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Original Prompt</p>
+                            </div>
+                            <p id="modal-original-text" class="text-slate-600 leading-relaxed font-medium text-sm whitespace-pre-wrap"></p>
+                        </div>
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6 max-h-96 overflow-y-auto">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-blue-600 text-sm"></i>
+                                </div>
+                                <p class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider">Enhanced Prompt</p>
+                            </div>
+                            <p id="modal-text" class="text-slate-800 leading-relaxed font-medium text-base whitespace-pre-wrap"></p>
+                        </div>
+                    </div>
+                    <!-- Copy inline -->
+                    <button onclick="copyResult()" class="absolute top-3 right-3 w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-300 transition-all text-xs">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-3 gap-3 mb-3">
+                    <button onclick="copyResult()" id="copy-btn"
+                        class="py-4 bg-slate-900 text-white rounded-2xl font-extrabold hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2 shadow-xl shadow-slate-900/20">
+                        <i class="fa-regular fa-copy"></i> <span data-en="Copy" data-ur="کاپی">Copy</span>
+                    </button>
+                    <button onclick="saveToFavorites()" id="save-btn"
+                        class="py-4 bg-white border-2 border-slate-200 text-slate-800 rounded-2xl font-extrabold hover:border-blue-400 hover:text-blue-600 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-bookmark"></i> <span data-en="Save" data-ur="محفوظ">Save</span>
+                    </button>
+                    <button onclick="regenerate()" id="regen-btn"
+                        class="py-4 bg-indigo-50 border-2 border-indigo-100 text-indigo-700 rounded-2xl font-extrabold hover:bg-indigo-100 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> <span data-en="Remix" data-ur="دوبارہ">Remix</span>
+                    </button>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" data-en="Advanced copy formats" data-ur="ایڈوانسڈ کاپی فارمیٹس">Advanced copy formats</p>
+                    <div class="flex items-center gap-2">
+                        <span id="copy-formats-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Plus</span>
+                        <button id="copy-upgrade-btn" type="button" onclick="goToUpgrade()" class="hidden text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all">Upgrade</button>
+                    </div>
+                </div>
+                <div id="copy-formats-row" class="grid grid-cols-1 md:grid-cols-3 gap-2.5 mb-5">
+                    <button onclick="copyResultAs('plain')" class="py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:border-blue-300 hover:text-blue-600 transition-all text-sm">
+                        <span data-en="Copy Plain" data-ur="سادہ کاپی">Copy Plain</span>
+                    </button>
+                    <button onclick="copyResultAs('markdown')" class="py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:border-blue-300 hover:text-blue-600 transition-all text-sm">
+                        <span data-en="Copy Markdown" data-ur="مارک ڈاؤن کاپی">Copy Markdown</span>
+                    </button>
+                    <button onclick="copyResultAs('json')" class="py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:border-blue-300 hover:text-blue-600 transition-all text-sm">
+                        <span data-en="Copy JSON (Dev)" data-ur="JSON کاپی (ڈیولپر)">Copy JSON (Dev)</span>
+                    </button>
+                </div>
+
+                <!-- Translate -->
+                <button onclick="translateResult()" id="translate-btn"
+                    class="w-full mb-5 py-3.5 bg-white border-2 border-slate-200 text-slate-700 rounded-2xl font-bold hover:border-violet-400 hover:text-violet-700 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-language text-violet-500"></i>
+                    <span data-en="Translate Result (EN ↔ UR)" data-ur="ترجمہ کریں (اردو ↔ انگریزی)">Translate Result (EN ↔ UR)</span>
+                </button>
+
+                <!-- Provider Deploy Section -->
+                <div id="provider-section" class="pt-5 border-t-2 border-slate-100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="flex-1 h-px bg-slate-100"></div>
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-[.2em] px-3 whitespace-nowrap" data-en="Send to AI Provider" data-ur="AI پر بھیجیں">Send to AI Provider</p>
+                        <div class="flex-1 h-px bg-slate-100"></div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <span id="provider-lock-badge" class="hidden inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-1 rounded-full bg-amber-100 text-amber-700">
+                            <i class="fa-solid fa-lock text-[9px]"></i> Pro/Plus only
+                        </span>
+                        <button id="provider-upgrade-btn" type="button" onclick="goToUpgrade()" class="hidden ml-2 text-[10px] font-extrabold px-2 py-1 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all">Upgrade</button>
+                    </div>
+                    <p class="text-xs text-center text-slate-400 mb-4 font-medium" data-en="Your enhanced result will be copied & the provider will open automatically." data-ur="آپ کا بہتر نتیجہ کاپی ہو گا اور AI فراہم کنندہ خود بخود کھل جائے گا۔">Your enhanced result will be copied &amp; the provider will open automatically.</p>
+                    <div class="flex gap-3 flex-wrap justify-center">
+                        <button onclick="deployToProvider('chatgpt')" class="provider-btn hover:border-[#10A37F]/40 hover:bg-[#10A37F]/5">
+                            <div class="provider-icon bg-[#10A37F]/10 text-[#10A37F]"><i class="fa-solid fa-robot"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-600">ChatGPT</span>
+                        </button>
+                        <button onclick="deployToProvider('claude')" class="provider-btn hover:border-[#D97757]/40 hover:bg-[#D97757]/5">
+                            <div class="provider-icon bg-[#D97757]/10 text-[#D97757]"><i class="fa-solid fa-brain"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-600">Claude</span>
+                        </button>
+                        <button onclick="deployToProvider('perplexity')" class="provider-btn hover:border-[#20B2AA]/40 hover:bg-[#20B2AA]/5">
+                            <div class="provider-icon bg-[#20B2AA]/10 text-[#20B2AA]"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-600">Perplexity</span>
+                        </button>
+                        <button onclick="deployToProvider('grok')" class="provider-btn hover:border-slate-400/40 hover:bg-slate-100">
+                            <div class="provider-icon bg-slate-100 text-slate-800"><i class="fa-solid fa-ghost"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-600">Grok</span>
+                        </button>
+                        <button onclick="deployToProvider('gemini')" class="provider-btn hover:border-[#4285F4]/40 hover:bg-[#4285F4]/5">
+                            <div class="provider-icon bg-[#4285F4]/10 text-[#4285F4]"><i class="fa-solid fa-gem"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-600">Gemini</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ LOGIN NUDGE MODAL ═══ -->
+    <div id="login-modal" onclick="if(event.target===this)closeLoginModal()">
+        <div id="login-box">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-5 shadow-xl shadow-blue-200">
+                <i class="fa-solid fa-lock-open text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold display-font mb-2" data-en="Unlock Full Power" data-ur="مکمل طاقت حاصل کریں">Unlock Full Power</h3>
+            <p class="text-slate-400 text-sm font-medium mb-8 leading-relaxed" data-en="Save results, use voice, access history & more." data-ur="نتائج محفوظ کریں، آواز استعمال کریں، تاریخ دیکھیں اور مزید۔">Save results, use voice, access history & more.</p>
+            <div class="flex flex-col gap-3">
+                <a href="/auth/login" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-extrabold hover:bg-black transition-all text-center shadow-xl">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i> <span data-en="Log In" data-ur="لاگ ان">Log In</span>
+                </a>
+                <a href="/user/generate-prompt" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold hover:opacity-90 transition-all text-center">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> <span data-en="Continue Generating" data-ur="تخلیق جاری رکھیں">Continue Generating</span>
+                </a>
+                <button onclick="closeLoginModal()" class="w-full py-3 text-slate-400 font-semibold hover:text-slate-600 transition-colors text-sm" data-en="Continue as Guest" data-ur="مہمان کے طور پر جاری رہیں">Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ TOAST ═══ -->
+    <div id="toast">
+        <i id="toast-icon" class="fa-solid fa-check text-green-400"></i>
+        <span id="toast-msg">Done!</span>
+    </div>
+
+    <script defer>
+        // ═══ STATE ═══
+        const isGuest = <%- typeof is_guest !== 'undefined' ? is_guest : 'true' %>;
+        const subscriptionPlan = "<%= typeof subscription_plan !== 'undefined' ? subscription_plan : 'free' %>";
+        const subscriptionStatus = "<%= typeof subscription_status !== 'undefined' ? subscription_status : 'inactive' %>";
+        const activePaidStatuses = ['active', 'trialing', 'past_due'];
+        const hasPaidAccess = activePaidStatuses.includes(String(subscriptionStatus || '').toLowerCase());
+        const accessTier = isGuest ? 'guest' : (hasPaidAccess ? String(subscriptionPlan || 'free').toLowerCase() : 'free');
+        const canUseProFeatures = accessTier === 'pro' || accessTier === 'plus';
+        const canUseCopyFormats = true;
+        const canUseProjectMemory = accessTier === 'plus';
+
+                let currentResult = '';
+        let currentOriginalInput = '';
+        let currentLang = localStorage.getItem('preferred_lang') || 'en';
+        let isRecording = false;
+        let recognition = null;
+        let currentCat = 'all';
+        let historyData = JSON.parse(localStorage.getItem('np_history') || '[]');
+
+        // ═══ INSPIRATION CARDS DATA ═══
+        const inspirations = [
+            { cat: 'text', icon: 'fa-envelope', title: 'Professional Email', title_ur: 'پیشہ ورانہ ای میل', label: 'Writing', label_ur: 'تحریر', color: 'text-blue-600', bg: 'bg-blue-50', type: 'writing', tone: 'professional',
+              input: 'Write a clear, professional email. Include a warm greeting, clear purpose in the subject, key message in bullet points, a polite call to action, and formal sign-off. Placeholders: [Name], [Subject], [Context].' },
+            { cat: 'text', icon: 'fa-file-signature', title: 'Cover Letter', title_ur: 'کور لیٹر', label: 'Writing', label_ur: 'تحریر', color: 'text-indigo-600', bg: 'bg-indigo-50', type: 'writing', tone: 'professional',
+              input: 'Write a compelling cover letter for [Job Title] at [Company]. Open with a strong hook. Highlight 3 achievements with metrics. Close with a confident CTA. Under 300 words. No clichés.' },
+            { cat: 'business', icon: 'fa-handshake', title: 'Sales Pitch', title_ur: 'سیلز پچ', label: 'Business', label_ur: 'کاروبار', color: 'text-amber-600', bg: 'bg-amber-50', type: 'planning', tone: 'persuasive',
+              input: 'Using the PAS framework, write a B2B sales pitch for [Product]: (1) pain-point hook, (2) agitate the cost, (3) unique value prop, (4) 3 specific benefits with metrics, (5) social proof, (6) low-friction CTA.' },
+            { cat: 'image', icon: 'fa-image', title: 'Cinematic Portrait', title_ur: 'سنیما پورٹریٹ', label: 'Image', label_ur: 'تصویر', color: 'text-rose-600', bg: 'bg-rose-50', type: 'image', tone: 'creative',
+              input: 'Cinematic portrait of [subject], golden hour lighting, 85mm lens bokeh, ARRI Alexa footage grade, shallow depth of field, hyper-realistic skin texture, award-winning photography, Vogue magazine aesthetic.' },
+            { cat: 'code', icon: 'fa-code', title: 'Feature Builder', title_ur: 'فیچر بلڈر', label: 'Code', label_ur: 'کوڈ', color: 'text-teal-600', bg: 'bg-teal-50', type: 'code', tone: 'technical',
+              input: 'You are a senior [Language] developer. Build a [Feature] with: clean architecture, error handling, input validation, unit tests, and inline JSDoc comments. Return: implementation code, integration guide, list of edge cases handled.' },
+        ];
+
+        // ═══ TEMPLATES ═══
+        const templates = [
+            { icon: 'fa-rocket', title_en: 'Build SaaS Idea', title_ur: 'SaaS آئیڈیا بنائیں', type_en: 'Planning', type_ur: 'منصوبہ بندی', type: 'planning', tone: 'professional',
+              input: 'Act as a startup strategist. Turn this SaaS concept into an execution plan: target persona, painful problem, unique value proposition, MVP features, pricing model, acquisition channels, 90-day roadmap, and launch risks with mitigation.' },
+            { icon: 'fa-bug', title_en: 'Fix Code Bug', title_ur: 'کوڈ بگ ٹھیک کریں', type_en: 'Code', type_ur: 'کوڈ', type: 'code', tone: 'technical',
+              input: 'Act as a senior debugging engineer. Analyze this bug step-by-step, identify likely root causes, suggest a minimal fix first, then provide a robust fix with validation checks, regression tests, and final corrected code.' },
+            { icon: 'fa-linkedin', title_en: 'Write LinkedIn Post', title_ur: 'LinkedIn پوسٹ لکھیں', type_en: 'Writing', type_ur: 'تحریر', type: 'writing', tone: 'professional',
+              input: 'Write a high-performing LinkedIn post with: strong first-line hook, story + insight, one actionable takeaway, concise style, and a natural CTA for comments. Keep it authentic and professional.' },
+        ];
+
+        // ═══ RENDER CARDS ═══
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            const isUrdu = currentLang === 'ur';
+            const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+            const filtered = inspirations.filter(p => {
+                const matchesCat = currentCat === 'all' || p.cat === currentCat;
+                const matchesSearch = !search || (p.title + p.title_ur + p.label).toLowerCase().includes(search);
+                return matchesCat && matchesSearch;
+            });
+            if (!filtered.length) {
+                grid.innerHTML = '<p class="text-slate-300 text-sm col-span-2 py-8 text-center font-semibold">No results found.</p>';
+                return;
+            }
+            grid.innerHTML = filtered.map(p => `
+                <div class="creation-card" onclick="loadCard(${JSON.stringify(p.input).replace(/</g,'\\u003c')}, '${p.type}', '${p.tone}')">
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl ${p.bg} ${p.color} flex items-center justify-center flex-shrink-0 text-base">
+                            <i class="fa-solid ${p.icon}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-extrabold text-slate-900 text-sm leading-tight">${isUrdu ? p.title_ur : p.title}</h4>
+                            <span class="text-[10px] font-bold ${p.color} uppercase tracking-wider">${isUrdu ? p.label_ur : p.label}</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-xs font-medium line-clamp-2 leading-relaxed">${p.input.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+        }
+
+        function loadCard(input, type, tone) {
+            document.getElementById('ai-input').value = input;
+            if (type) document.getElementById('creation-type').value = type;
+            if (tone) document.getElementById('creation-tone').value = tone;
+            setTab('create');
+            document.getElementById('ai-input').focus();
+            showToast('✨', currentLang === 'ur' ? 'ڈیٹا لوڈ ہو گیا!' : 'Idea loaded! Now click Enhance.');
+        }
+
+        // ═══ RENDER TEMPLATES ═══
+        function renderTemplates() {
+            const grid = document.getElementById('template-grid');
+            const isUrdu = currentLang === 'ur';
+            grid.innerHTML = templates.map((t, i) => `
+                <div class="template-card" id="tpl-${i}" onclick="loadTemplate(${i})">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                            <i class="fa-solid ${t.icon}"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-slate-900 text-sm">${isUrdu ? t.title_ur : t.title_en}</h4>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${isUrdu ? t.type_ur : t.type_en}</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-xs font-medium line-clamp-2">${t.input.substring(0, 90)}...</p>
+                </div>
+            `).join('');
+        }
+
+        function loadTemplate(i) {
+            const t = templates[i];
+            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById(`tpl-${i}`)?.classList.add('selected');
+            document.getElementById('ai-input').value = t.input;
+            document.getElementById('creation-type').value = t.type;
+            document.getElementById('creation-tone').value = t.tone;
+            setTab('create');
+            document.getElementById('ai-input').focus();
+            showToast('📋', currentLang === 'ur' ? 'خاکہ لوڈ ہو گیا!' : 'Template loaded!');
+        }
+
+        // ═══ SWITCH CATEGORY ═══
+        function switchCat(btn, cat) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCards();
+        }
+
+        // ═══ TAB TOGGLE ═══
+        function setTab(tab) {
+            document.getElementById('create-section').classList.toggle('hidden', tab !== 'create');
+            document.getElementById('template-section').classList.toggle('hidden', tab !== 'template');
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                b.classList.add('text-slate-500');
+            });
+            const activeBtn = document.getElementById('tab-' + tab);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                activeBtn.classList.remove('text-slate-500');
+            }
+        }
+
+        // ═══ MODAL ═══
+        function openModal() {
+            document.getElementById('modal-overlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('show');
+            document.body.style.overflow = '';
+            // Clear modal state
+            sessionStorage.removeItem('modal_state');
+        }
+        function handleOverlayClick(e) { if (e.target.id === 'modal-overlay') closeModal(); }
+
+        function showLoading() {
+            document.getElementById('modal-label').innerText = '';
+            document.getElementById('modal-loading').classList.remove('hidden');
+            document.getElementById('modal-content').classList.add('hidden');
+            openModal();
+        }
+        function showResult(text, label) {
+            currentResult = text;
+            document.getElementById('modal-label').innerText = label;
+            document.getElementById('modal-original-text').innerText = currentOriginalInput || '';
+            document.getElementById('modal-loading').classList.add('hidden');
+            document.getElementById('modal-content').classList.remove('hidden');
+            
+            let parsedQuestions = null;
+            try {
+                if (text.startsWith('[') && text.endsWith(']')) {
+                    parsedQuestions = JSON.parse(text);
+                }
+            } catch (e) {}
+
+            if (parsedQuestions && Array.isArray(parsedQuestions) && parsedQuestions.length > 0) {
+                // Show clarification UI
+                const container = document.getElementById('modal-dynamic-questions');
+                container.innerHTML = parsedQuestions.map((q, idx) => `
+                    <div class="mb-3">
+                        <label class="block text-slate-800 font-bold text-sm mb-1 ml-1">${q}</label>
+                        <input type="text" id="clarification-answer-${idx}" data-question="${q.replace(/"/g, '&quot;')}" class="w-full bg-white border-2 border-amber-100 focus:border-amber-400 focus:ring-0 text-sm px-4 py-2.5 rounded-xl placeholder:text-slate-400 font-medium transition-all outline-none clarification-input" placeholder="${currentLang === 'ur' ? 'یہاں جواب دیں...' : 'Type your answer here...'}">
+                    </div>
+                `).join('');
+                
+                document.getElementById('modal-clarification').classList.remove('hidden');
+                document.getElementById('modal-result-container').classList.add('hidden');
+                
+                // Hide main action buttons (Copy, Save, Remix) for clarification
+                document.getElementById('copy-btn').parentElement.classList.add('hidden');
+                document.getElementById('copy-formats-row').classList.add('hidden');
+                document.getElementById('copy-formats-row').previousElementSibling.classList.add('hidden');
+                document.getElementById('translate-btn').classList.add('hidden');
+                document.getElementById('provider-section').classList.add('hidden');
+
+                // Bind input listener to dynamically generated inputs
+                document.querySelectorAll('.clarification-input').forEach((input, index) => {
+                    input.addEventListener('input', () => {
+                        const state = JSON.parse(sessionStorage.getItem('modal_state') || '{}');
+                        if (!state.answers) state.answers = [];
+                        state.answers[index] = input.value;
+                        sessionStorage.setItem('modal_state', JSON.stringify(state));
+                    });
+                });
+
+                // Save modal state
+                sessionStorage.setItem('modal_state', JSON.stringify({
+                    type: 'clarification',
+                    text: text,
+                    label: label,
+                    originalInput: currentOriginalInput,
+                    answers: []
+                }));
+            } else {
+                // Show standard result UI
+                document.getElementById('modal-text').innerText = text;
+                document.getElementById('modal-clarification').classList.add('hidden');
+                document.getElementById('modal-result-container').classList.remove('hidden');
+                
+                // Show main action buttons
+                document.getElementById('copy-btn').parentElement.classList.remove('hidden');
+                document.getElementById('copy-formats-row').classList.remove('hidden');
+                document.getElementById('copy-formats-row').previousElementSibling.classList.remove('hidden');
+                document.getElementById('translate-btn').classList.remove('hidden');
+                document.getElementById('provider-section').classList.remove('hidden');
+                
+                const copyBtn = document.getElementById('copy-btn');
+                copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> <span data-en="Copy" data-ur="کاپی">Copy</span>';
+                copyBtn.className = 'py-4 bg-slate-900 text-white rounded-2xl font-extrabold hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2 shadow-xl shadow-slate-900/20';
+                
+                // Save modal state
+                sessionStorage.setItem('modal_state', JSON.stringify({
+                    type: 'result',
+                    text: text,
+                    label: label,
+                    originalInput: currentOriginalInput
+                }));
+            }
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+        }
+
+        async function submitClarification() {
+            const inputs = document.querySelectorAll('.clarification-input');
+            let allEmpty = true;
+            let qaText = '';
+            
+            inputs.forEach(input => {
+                const ans = input.value.trim();
+                if (ans) {
+                    allEmpty = false;
+                    qaText += `Q: ${input.dataset.question}\nA: ${ans}\n\n`;
+                }
+            });
+
+            if (allEmpty) {
+                showToast('⚠️', currentLang === 'ur' ? 'براہ کرم کم از کم ایک جواب فراہم کریں!' : 'Please provide at least one answer!', true);
+                return;
+            }
+            
+            const btn = document.getElementById('clarification-submit-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+            btn.disabled = true;
+            
+            // Combine context
+            const combinedInput = `Original Idea: ${currentOriginalInput}\n\nUser Answers to Clarification Questions:\n${qaText}`;
+            
+            // Re-run generation with combined input
+            document.getElementById('ai-input').value = combinedInput;
+            closeModal();
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+            
+            await enhanceCreation();
+            
+            // Reset input field back to original visual
+            document.getElementById('ai-input').value = currentOriginalInput;
+        }
+
+        function setBtnLoading(btnId, isLoading, loadingText = 'Processing...') {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            if (!btn.dataset.originalHtml) {
+                btn.dataset.originalHtml = btn.innerHTML;
+            }
+            if (isLoading) {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${loadingText}</span>`;
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                btn.innerHTML = btn.dataset.originalHtml;
+                if (typeof globalApplyLang === 'function') globalApplyLang();
+            }
+        }
+
+        // ═══ ENHANCE CREATION ═══
+        async function enhanceCreation() {
+            const inputVal = document.getElementById('ai-input').value.trim();
+            if (!inputVal) {
+                showToast('⚠️', currentLang === 'ur' ? 'پہلے اپنا خیال لکھیں!' : 'Please write your idea first!', true);
+                return;
+            }
+
+            const type = document.getElementById('creation-type').value;
+            const tone = document.getElementById('creation-tone').value;
+            const level = document.getElementById('creation-level').value;
+            const targetProvider = document.getElementById('target-provider').value;
+            const projectId = document.getElementById('project-select')?.value || '';
+            currentOriginalInput = inputVal;
+            let memoryContext = '';
+
+            if (projectId) {
+                try {
+                    const contextRes = await fetch(`/user/projects/${projectId}/context?limit=6`);
+                    if (contextRes.ok) {
+                        const contextRows = await contextRes.json();
+                        if (Array.isArray(contextRows) && contextRows.length) {
+                            const chunks = contextRows.map((row, idx) =>
+                                `Q${idx + 1}: ${row.question_text}\nA${idx + 1}: ${row.answer_text}`
+                            );
+                            memoryContext = `\n\nPROJECT MEMORY CONTEXT:\n${chunks.join('\n\n')}\n\nUse this context for consistency with prior decisions.`;
+                        }
+                    }
+                } catch (_) {}
+            }
+
+            setBtnLoading('enhance-btn', true, currentLang === 'ur' ? 'تیار ہو رہا ہے...' : 'Enhancing...');
+            showLoading();
+
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input: inputVal + memoryContext, type, lang: currentLang, tone, level })
+                });
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    if (res.status === 401) {
+                        throw new Error(currentLang === 'ur' ? 'جاری رکھنے کے لیے براہ کرم سائن اِن کریں۔' : 'Please sign in to continue.');
+                    }
+                    if (res.status === 429) {
+                        throw new Error(data.error || (currentLang === 'ur' ? 'آج کی حد مکمل ہو گئی۔ براہ کرم پلان اپ گریڈ کریں۔' : 'Daily limit reached. Please upgrade your plan.'));
+                    }
+                    throw new Error(data.error || (currentLang === 'ur' ? 'درخواست مکمل نہیں ہو سکی۔' : 'Could not complete your request.'));
+                }
+
+                const enhanced = data.text.trim();
+                
+                // Check if fallback was used and show beautiful notification
+                if (data.fallbackUsed) {
+                    const providerName = data.provider || 'Backup API';
+                    showToast('🔄', currentLang === 'ur' 
+                        ? `API 2 کامیابی سے لاگو ہو گیا! (${providerName})` 
+                        : `API 2 implemented successfully! (${providerName})`, false);
+                }
+                
+                showResult(enhanced, `${type.toUpperCase()} · ${tone} · ${level}`);
+
+                if (projectId && enhanced) {
+                    fetch(`/user/projects/${projectId}/context`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question: inputVal, answer: enhanced })
+                    }).catch(() => {});
+                }
+
+                // Save to history
+                if (!isGuest) {
+                    await fetch('/user/history', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ original: inputVal, enhanced, type })
+                    });
+                    renderHistory();
+                }
+                
+                if (targetProvider !== 'none') {
+                    setTimeout(() => deployToProvider(targetProvider), 1500);
+                }
+
+            } catch (e) {
+                document.getElementById('modal-loading').classList.add('hidden');
+                document.getElementById('modal-content').classList.remove('hidden');
+                document.getElementById('modal-text').innerText = (currentLang === 'ur' ? '⚠️ مسئلہ: ' : '⚠️ ') + e.message;
+            } finally {
+                setBtnLoading('enhance-btn', false);
+            }
+        }
+
+        function formatResultForCopy(format) {
+            const labelText = document.getElementById('modal-label')?.innerText || 'Result';
+            const typeVal = document.getElementById('creation-type')?.value || 'standard';
+            const toneVal = document.getElementById('creation-tone')?.value || 'professional';
+            const levelVal = document.getElementById('creation-level')?.value || 'standard';
+
+            if (format === 'markdown') {
+                return `## ${labelText}\n\n${currentResult}`;
+            }
+            if (format === 'json') {
+                const payload = {
+                    label: labelText,
+                    type: typeVal,
+                    tone: toneVal,
+                    level: levelVal,
+                    language: currentLang,
+                    prompt: currentResult
+                };
+                return JSON.stringify(payload, null, 2);
+            }
+            return currentResult;
+        }
+
+        function copyResultAs(format = 'plain') {
+            if (!currentResult) return;
+            const textToCopy = formatResultForCopy(format);
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const formatNames = {
+                    plain: currentLang === 'ur' ? 'سادہ' : 'Plain',
+                    markdown: 'Markdown',
+                    json: 'JSON'
+                };
+                showToast('📋', `${formatNames[format] || 'Plain'} ${currentLang === 'ur' ? 'کاپی ہو گیا!' : 'copied to clipboard!'}`);
+            }).catch(() => {
+                showToast('❌', currentLang === 'ur' ? 'کاپی نہیں ہو سکا۔' : 'Copy failed.', true);
+            });
+        }
+
+        function copyResult() {
+            if (!currentResult) return;
+            navigator.clipboard.writeText(currentResult).then(() => {
+                showToast('📋', currentLang === 'ur' ? 'کاپی ہو گیا!' : 'Copied to clipboard!');
+            }).catch(() => {
+                showToast('❌', currentLang === 'ur' ? 'کاپی نہیں ہو سکا۔' : 'Copy failed.', true);
+            });
+            const btn = document.getElementById('copy-btn');
+            if (!btn) return;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Copied!</span>';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i> <span data-en="Copy" data-ur="کاپی">Copy</span>';
+                if (typeof globalApplyLang === 'function') globalApplyLang();
+            }, 2000);
+        }
+
+        async function saveToFavorites() {
+            if (isGuest) { showLoginNudge(); return; }
+            if (!currentResult) return;
+            setBtnLoading('save-btn', true, currentLang === 'ur' ? 'محفوظ ہو رہا ہے...' : 'Saving...');
+            try {
+                await fetch('/user/favorites', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: currentResult, title: document.getElementById('modal-label').innerText || 'My Creation', category: 'saved' })
+                });
+                showToast('🔖', currentLang === 'ur' ? 'محفوظ ہو گیا!' : 'Saved to Library!');
+            } catch (e) { showToast('❌', 'Save failed!', true); }
+            finally { setBtnLoading('save-btn', false); }
+        }
+
+        async function renderHistory() {
+            const el = document.getElementById('history-list');
+            if (!el) return;
+            if (!isGuest) {
+                const res = await fetch('/user/history');
+                const data = await res.json();
+                if (Array.isArray(data)) historyData = data;
+            }
+            if (!historyData.length) {
+                el.innerHTML = '<p class="text-slate-300 text-sm font-semibold py-4">No history yet.</p>';
+                return;
+            }
+            el.innerHTML = historyData.slice(0, 6).map(h => `
+                <div class="creation-card" onclick='showResult(${JSON.stringify(h.enhanced_result || h.enhanced)}, "History")'>
+                    <p class="text-[10px] font-bold text-slate-400 mb-1">${h.created_at || ''}</p>
+                    <p class="font-extrabold text-slate-800 text-sm mb-1 line-clamp-1">${escH(h.original_input || h.original)}</p>
+                </div>`).join('');
+        }
+
+        function deployToProvider(provider) {
+            if (!currentResult) return;
+            if (!canUseProFeatures) {
+                showToast('🔒', currentLang === 'ur' ? 'یہ فیچر پرو پلان میں دستیاب ہے۔' : 'This feature is available on Pro plan only.', true);
+                return;
+            }
+            navigator.clipboard.writeText(currentResult);
+            const encoded = encodeURIComponent(currentResult);
+            const providerUrls = {
+                chatgpt: `https://chatgpt.com/?q=${encoded}`,
+                claude: `https://claude.ai/new?q=${encoded}`,
+                perplexity: `https://www.perplexity.ai/search?q=${encoded}`,
+                grok: `https://x.com/i/grok?q=${encoded}`,
+                gemini: `https://gemini.google.com/app?hl=en`
+            };
+            window.open(providerUrls[provider] || 'https://chatgpt.com/', '_blank');
+        }
+
+        function handleVoice() {
+            if (!canUseProFeatures) {
+                showToast('🔒', currentLang === 'ur' ? 'وائس فیچر کے لیے پرو پلان لیں۔' : 'Upgrade to Pro to use voice input.', true);
+                return;
+            }
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Speech) { showToast('❌', 'Voice not supported.', true); return; }
+            if (isRecording) { recognition?.stop(); return; }
+            recognition = new Speech();
+            recognition.lang = currentLang === 'ur' ? 'ur-PK' : 'en-US';
+            recognition.onstart = () => {
+                isRecording = true;
+                document.getElementById('voice-btn').classList.add('recording');
+                document.getElementById('rec-bar').classList.add('active');
+            };
+            recognition.onresult = e => {
+                document.getElementById('ai-input').value += ' ' + e.results[0][0].transcript;
+            };
+            recognition.onend = () => {
+                isRecording = false;
+                document.getElementById('voice-btn').classList.remove('recording');
+                document.getElementById('rec-bar').classList.remove('active');
+            };
+            recognition.start();
+        }
+
+        function handleAttachment() {
+            if (!canUseProFeatures) {
+                showToast('🔒', currentLang === 'ur' ? 'اٹیچمنٹ کے لیے پرو پلان ضروری ہے۔' : 'Upgrade to Pro to use attachments.', true);
+                return;
+            }
+            document.getElementById('file-input').click();
+        }
+        function handleFileSelected(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('ai-input').value += `\n\n--- ${file.name} ---\n${e.target.result.substring(0, 2000)}`;
+                showToast('📎', 'File attached!');
+            };
+            reader.readAsText(file);
+        }
+
+        function showLoginNudge() { document.getElementById('login-modal').classList.add('show'); }
+        function closeLoginModal() { document.getElementById('login-modal').classList.remove('show'); }
+        function goToUpgrade() {
+            if (isGuest) {
+                window.location.href = '/auth/login';
+                return;
+            }
+            window.location.href = '/user/plans';
+        }
+
+        function applyFeatureAccess() {
+            const badge = document.getElementById('plan-badge');
+            const voiceBtn = document.getElementById('voice-btn');
+            const attachBtn = document.getElementById('attach-btn');
+            const fileInput = document.getElementById('file-input');
+            const providerSelect = document.getElementById('target-provider');
+            const providerSection = document.getElementById('provider-section');
+            const copyFormatsRow = document.getElementById('copy-formats-row');
+            const copyFormatsBadge = document.getElementById('copy-formats-badge');
+            const providerLockBadge = document.getElementById('provider-lock-badge');
+            const voiceLockBadge = document.getElementById('voice-lock-badge');
+            const attachLockBadge = document.getElementById('attach-lock-badge');
+            const voiceUpgradeBtn = document.getElementById('voice-upgrade-btn');
+            const attachUpgradeBtn = document.getElementById('attach-upgrade-btn');
+            const copyUpgradeBtn = document.getElementById('copy-upgrade-btn');
+            const providerUpgradeBtn = document.getElementById('provider-upgrade-btn');
+            const projectWrap = document.getElementById('project-memory-wrap');
+            const projectBadge = document.getElementById('project-memory-badge');
+            const projectHelp = document.getElementById('project-memory-help');
+            const projectSelect = document.getElementById('project-select');
+            const projectCreateBtn = document.getElementById('project-create-btn');
+            const projectNameInput = document.getElementById('project-name-input');
+
+            if (badge) {
+                const badgeText = {
+                    guest: 'Guest: 10 tries/day | Basic prompt generation',
+                    free: 'Free: 40 tries/day | Save + Templates access',
+                    pro: 'Pro: 200 tries/day | Voice + Attachments enabled',
+                    business: 'Business: Unlimited tries/day | Voice + Attachments enabled',
+                    plus: 'Plus: Unlimited tries/day | All features enabled + advanced copy formats'
+                };
+                badge.querySelector('span').innerText = badgeText[accessTier] || badgeText.free;
+            }
+
+            if (copyFormatsRow) {
+                copyFormatsRow.classList.remove('opacity-60');
+                copyFormatsRow.classList.remove('pointer-events-none');
+                if (copyFormatsBadge) {
+                    copyFormatsBadge.innerText = 'Free+';
+                    copyFormatsBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+                }
+            }
+            if (copyFormatsBadge) {
+                copyFormatsBadge.innerText = 'Free+';
+                copyFormatsBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+            }
+            if (copyUpgradeBtn) copyUpgradeBtn.classList.add('hidden');
+
+            if (!canUseProFeatures) {
+                [voiceBtn, attachBtn].forEach((btn) => {
+                    if (!btn) return;
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.title = 'Upgrade to Pro to unlock this feature';
+                });
+                if (fileInput) fileInput.disabled = true;
+                if (voiceLockBadge) voiceLockBadge.classList.remove('hidden');
+                if (attachLockBadge) attachLockBadge.classList.remove('hidden');
+                if (voiceUpgradeBtn) voiceUpgradeBtn.classList.remove('hidden');
+                if (attachUpgradeBtn) attachUpgradeBtn.classList.remove('hidden');
+            } else {
+                if (voiceLockBadge) voiceLockBadge.classList.add('hidden');
+                if (attachLockBadge) attachLockBadge.classList.add('hidden');
+                if (voiceUpgradeBtn) voiceUpgradeBtn.classList.add('hidden');
+                if (attachUpgradeBtn) attachUpgradeBtn.classList.add('hidden');
+            }
+
+            if (accessTier === 'guest' || accessTier === 'free') {
+                if (providerSelect) {
+                    providerSelect.value = 'none';
+                    providerSelect.disabled = true;
+                    providerSelect.classList.add('opacity-60', 'cursor-not-allowed');
+                    providerSelect.title = 'Upgrade to Pro to send results to external providers';
+                }
+                if (providerLockBadge) providerLockBadge.classList.remove('hidden');
+                if (providerUpgradeBtn) providerUpgradeBtn.classList.remove('hidden');
+            } else {
+                if (providerSelect) {
+                    providerSelect.disabled = false;
+                    providerSelect.classList.remove('opacity-60', 'cursor-not-allowed');
+                    providerSelect.title = '';
+                }
+                if (providerLockBadge) providerLockBadge.classList.add('hidden');
+                if (providerUpgradeBtn) providerUpgradeBtn.classList.add('hidden');
+            }
+            if (canUseCopyFormats && copyUpgradeBtn) copyUpgradeBtn.classList.add('hidden');
+
+            if (projectWrap) {
+                if (canUseProjectMemory) {
+                    projectWrap.classList.remove('opacity-60');
+                    if (projectBadge) {
+                        projectBadge.innerText = 'Plus';
+                        projectBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+                    }
+                    if (projectHelp) projectHelp.innerText = 'Use a folder to remember past questions and answers for this project.';
+                    if (projectSelect) projectSelect.disabled = false;
+                    if (projectCreateBtn) projectCreateBtn.disabled = false;
+                    if (projectNameInput) projectNameInput.disabled = false;
+                } else {
+                    projectWrap.classList.add('opacity-60');
+                    if (projectBadge) {
+                        projectBadge.innerText = 'Plus only';
+                        projectBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700';
+                    }
+                    if (projectHelp) projectHelp.innerText = 'Upgrade to Plus to enable project folders with memory across prompts.';
+                    if (projectSelect) projectSelect.disabled = true;
+                    if (projectCreateBtn) projectCreateBtn.disabled = true;
+                    if (projectNameInput) projectNameInput.disabled = true;
+                }
+            }
+        }
+
+        async function loadProjectFolders() {
+            if (!canUseProjectMemory) return;
+            const select = document.getElementById('project-select');
+            if (!select) return;
+            try {
+                const res = await fetch('/user/projects');
+                if (!res.ok) return;
+                const rows = await res.json();
+                select.innerHTML = '<option value="">No folder selected</option>';
+                (rows || []).forEach((row) => {
+                    const opt = document.createElement('option');
+                    opt.value = row.id;
+                    opt.innerText = row.name;
+                    select.appendChild(opt);
+                });
+            } catch (_) {}
+        }
+
+        async function createProjectFolder() {
+            if (!canUseProjectMemory) {
+                showToast('🔒', currentLang === 'ur' ? 'یہ فیچر صرف Plus پلان کے لیے ہے۔' : 'This feature is for Plus users only.', true);
+                return;
+            }
+            const nameInput = document.getElementById('project-name-input');
+            const name = nameInput?.value.trim();
+            if (!name) {
+                showToast('⚠️', currentLang === 'ur' ? 'پہلے فولڈر کا نام لکھیں۔' : 'Enter a folder name first.', true);
+                return;
+            }
+            setBtnLoading('project-create-btn', true, currentLang === 'ur' ? 'بن رہا ہے...' : 'Creating...');
+            try {
+                const res = await fetch('/user/projects', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'Could not create folder.');
+                if (nameInput) nameInput.value = '';
+                await loadProjectFolders();
+                const select = document.getElementById('project-select');
+                if (select) select.value = String(data.id);
+                showToast('📁', currentLang === 'ur' ? 'فولڈر بن گیا!' : 'Project folder created.');
+            } catch (e) {
+                showToast('❌', e.message || 'Failed', true);
+            } finally {
+                setBtnLoading('project-create-btn', false);
+            }
+        }
+
+        async function translateResult() {
+            if (!currentResult) return;
+            const target = currentLang === 'en' ? 'ur' : 'en';
+            setBtnLoading('translate-btn', true, currentLang === 'ur' ? 'ترجمہ ہو رہا ہے...' : 'Translating...');
+            showToast('🌐', target === 'ur' ? 'ترجمہ ہو رہا ہے...' : 'Translating...');
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        input: `Translate the following text into ${target === 'ur' ? 'Urdu' : 'English'}: \n\n${currentResult}`,
+                        type: 'standard',
+                        lang: target,
+                        tone: 'professional',
+                        level: 'standard'
+                    })
+                });
+                const data = await res.json();
+                if (data.text) {
+                    showResult(data.text, `Translation (${target.toUpperCase()})`);
+                }
+            } catch (e) { showToast('❌', 'Translation failed', true); }
+            finally { setBtnLoading('translate-btn', false); }
+        }
+
+        function regenerate() {
+            setBtnLoading('regen-btn', true, currentLang === 'ur' ? 'دوبارہ بنایا جا رہا ہے...' : 'Regenerating...');
+            closeModal();
+            Promise.resolve(enhanceCreation()).finally(() => setBtnLoading('regen-btn', false));
+        }
+
+        function showToast(icon, msg, isError = false) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-icon').className = isError ? 'fa-solid fa-triangle-exclamation text-red-400' : 'fa-solid fa-check text-green-400';
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function handleOtherOption(fieldId, value) {
+            const otherInputDiv = document.getElementById(fieldId + '-other');
+            const selectElement = document.getElementById(fieldId);
+            
+            if (value === 'Other') {
+                otherInputDiv.classList.remove('hidden');
+                document.getElementById(fieldId + '-text').focus();
+            } else {
+                otherInputDiv.classList.add('hidden');
+                document.getElementById(fieldId + '-text').value = '';
+            }
+        }
+
+        function updateOtherValue(fieldId) {
+            const otherText = document.getElementById(fieldId + '-text').value.trim();
+            const selectElement = document.getElementById(fieldId);
+            
+            if (otherText) {
+                selectElement.value = otherText;
+            }
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ur' : 'en';
+            localStorage.setItem('preferred_lang', currentLang);
+            applyLang();
+        }
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+            renderCards(); renderTemplates(); renderHistory();
+        }
+        function escH(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+        window.onload = () => {
+            applyLang();
+            applyFeatureAccess();
+            loadProjectFolders();
+            
+            // Auto-save logic
+            const mainInput = document.getElementById('ai-input');
+            mainInput.addEventListener('input', () => {
+                sessionStorage.setItem('ai_input_saved', mainInput.value);
+            });
+            
+            // Handle restore of ai-input
+            const savedInput = sessionStorage.getItem('ai_input_saved');
+            if (savedInput) {
+                mainInput.value = savedInput;
+            }
+            
+            // Handle restore of modal state
+            const savedModalState = sessionStorage.getItem('modal_state');
+            if (savedModalState) {
+                try {
+                    const state = JSON.parse(savedModalState);
+                    currentOriginalInput = state.originalInput;
+                    
+                    // Reopen the modal logic
+                    openModal();
+                    showResult(state.text, state.label);
+                    
+                    // Restore answers if clarification
+                    if (state.type === 'clarification' && state.answers && state.answers.length > 0) {
+                        const inputs = document.querySelectorAll('.clarification-input');
+                        inputs.forEach((input, idx) => {
+                            if (state.answers[idx]) {
+                                input.value = state.answers[idx];
+                            }
+                        });
+                    }
+                } catch(e) {}
+            }
+
+            // Handle remix from history page
+            const remixInput = sessionStorage.getItem('remix_input');
+            const remixType = sessionStorage.getItem('remix_type');
+            if (remixInput) {
+                document.getElementById('ai-input').value = remixInput;
+                if (remixType) document.getElementById('creation-type').value = remixType;
+                sessionStorage.removeItem('remix_input');
+                sessionStorage.removeItem('remix_type');
+                showToast('✨', currentLang === 'ur' ? 'ڈیٹا لوڈ ہو گیا!' : 'Magic loaded! Ready to remix.');
+            }
+
+            // Handle prefilled prompt from Generate Prompt wizard
+            const prefilled = sessionStorage.getItem('prefilled_prompt');
+            const prefilledType = sessionStorage.getItem('prefilled_type');
+            const prefilledTone = sessionStorage.getItem('prefilled_tone');
+            if (prefilled) {
+                document.getElementById('ai-input').value = prefilled;
+                if (prefilledType) document.getElementById('creation-type').value = prefilledType;
+                if (prefilledTone) document.getElementById('creation-tone').value = prefilledTone;
+                sessionStorage.removeItem('prefilled_prompt');
+                sessionStorage.removeItem('prefilled_type');
+                sessionStorage.removeItem('prefilled_tone');
+                // Focus the textarea and set cursor at end
+                const el = document.getElementById('ai-input');
+                el.focus();
+                el.setSelectionRange(el.value.length, el.value.length);
+                showToast('🪄', currentLang === 'ur' ? 'پرامپٹ تیار ہے!' : 'Prompt generated! Just add your details.');
+            }
+        };
+    </script>
+
+</body>
+</html>

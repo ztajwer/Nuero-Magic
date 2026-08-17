@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Plans | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif'],urdu:['Jameel Noori Nastaleeq','sans-serif']}}}}</script>
+    <style>
+        body { background: #fcfcfd; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.05) 0%, rgba(252, 252, 253, 1) 70%); }
+        
+        /* RTL */
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.1rem !important; text-align: right !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.2rem !important; }
+        [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] input, [dir="rtl"] button { font-family: 'Jameel Noori Nastaleeq', serif !important; text-align: right !important; }
+        [dir="rtl"] .lg\:ml-64 { margin-left: 0 !important; margin-right: 16rem !important; }
+
+        .plan-card { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); border: 2px solid transparent; }
+        .plan-card:hover { transform: translateY(-8px); border-color: #3b82f6; box-shadow: 0 30px 60px rgba(59, 130, 246, 0.1); }
+        .plan-card.active { border-color: #3b82f6; background: #fff; }
+        
+        .check-icon { color: #10b981; }
+    </style>
+    
+</head>
+<body class="antialiased text-slate-900">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen hero-gradient flex flex-col items-center py-12 lg:py-20 px-6">
+        
+        <div class="max-w-4xl w-full text-center mb-16">
+            <h1 class="text-4xl lg:text-6xl font-extrabold display-font tracking-tight mb-4" data-en="Choose Your Magic Plan" data-ur="اپنا جادوئی پلان منتخب کریں">Choose Your Magic Plan</h1>
+            <p class="text-slate-500 font-medium text-lg max-w-2xl mx-auto leading-relaxed" data-en="Unlock the full potential of AI with our premium tiers. Designed for creators who demand excellence." data-ur="ہمارے پریمیم پلانز کے ساتھ AI کی مکمل صلاحیتوں کو بروئے کار لائیں۔ ان تخلیق کاروں کے لیے جو بہترین کے خواہاں ہیں۔">Unlock the full potential of AI with our premium tiers. Designed for creators who demand excellence.</p>
+            <div id="free-usage-banner" class="mt-5 inline-flex items-center gap-2 bg-slate-100 text-slate-700 text-sm font-semibold px-4 py-2 rounded-xl">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span id="free-usage-text">Free usage: --/40 today</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
+            
+            <!-- Starter Plan -->
+            <div class="plan-card bg-white border border-slate-100 rounded-[40px] p-10 flex flex-col">
+                <div class="mb-8">
+                    <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 block" data-en="Free" data-ur="مفت">Free</span>
+                    <h2 class="text-3xl font-extrabold display-font flex items-baseline gap-1">
+                        <span data-en="PKR 0" data-ur="0 روپے">PKR 0</span>
+                        <span class="text-slate-400 text-sm font-medium" data-en="/mo" data-ur="/ماہ">/mo</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm font-medium mt-2" data-en="Guests get 10/day, logged-in free users get 40/day." data-ur="مہمان 10/دن اور لاگ اِن مفت صارفین 40/دن حاصل کرتے ہیں۔">Guests get 10/day, logged-in free users get 40/day.</p>
+                </div>
+                
+                <ul class="space-y-4 mb-10 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="10/day for guests, 40/day for logged-in users" data-ur="مہمان کے لیے 10/دن، لاگ اِن صارف کے لیے 40/دن">10/day for guests, 40/day for logged-in users</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Core prompt generation only" data-ur="صرف بنیادی پرامپٹ جنریشن">Core prompt generation only</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="High-quality response tuning" data-ur="اعلیٰ معیار کے جواب کی ترتیب">High-quality response tuning</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Upgrade any time" data-ur="کبھی بھی اپ گریڈ کریں">Upgrade any time</span>
+                    </li>
+                </ul>
+
+                <button id="free-btn" class="w-full py-4 bg-slate-50 text-slate-500 rounded-2xl font-bold cursor-default" data-en="Current Free Plan" data-ur="موجودہ مفت پلان">Current Free Plan</button>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="plan-card active bg-white border border-slate-100 rounded-[40px] p-10 flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white px-6 py-2 rounded-bl-3xl font-extrabold text-[10px] uppercase tracking-widest" data-en="Popular" data-ur="مشہور">Popular</div>
+                
+                <div class="mb-8">
+                    <span class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest mb-2 block" data-en="Pro Magic" data-ur="پرو میجک">Pro Magic</span>
+                    <h2 class="text-3xl font-extrabold display-font flex items-baseline gap-1">
+                        <span data-en="$3.5" data-ur="$3.5">$3.5</span>
+                        <span class="text-slate-400 text-sm font-medium" data-en="/mo" data-ur="/ماہ">/mo</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm font-medium mt-2" data-en="For serious creators who need richer workflows." data-ur="ان تخلیق کاروں کے لیے جو بہتر ورک فلو چاہتے ہیں۔">For serious creators who need richer workflows.</p>
+                </div>
+                
+                <ul class="space-y-4 mb-10 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="200 creations per day" data-ur="روزانہ 200 تخلیقات">200 creations per day</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="High-quality prompt enhancement" data-ur="اعلیٰ معیار کی پرامپٹ بہتری">High-quality prompt enhancement</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Voice & Audio Input" data-ur="وائس اور آڈیو ان پٹ">Voice & Audio Input</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Attachment Support" data-ur="اٹیچمنٹ سپورٹ">Attachment Support</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Provider routing + premium templates" data-ur="پرووائیڈر روٹنگ + پریمیم ٹیمپلیٹس">Provider routing + premium templates</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Priority 24/7 Support" data-ur="ترجیحی 24/7 مدد">Priority 24/7 Support</span>
+                    </li>
+                </ul>
+
+                <button id="pro-btn" data-plan="pro" class="subscribe-btn w-full py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-500/20" data-en="Upgrade to Pro" data-ur="پرو پر اپ گریڈ کریں">Upgrade to Pro</button>
+            </div>
+
+            <!-- Plus Plan -->
+            <div class="plan-card bg-white border border-slate-100 rounded-[40px] p-10 flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-bl-3xl font-extrabold text-[10px] uppercase tracking-widest" data-en="Premium" data-ur="پریمیم">Premium</div>
+                
+                <div class="mb-8">
+                    <span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-widest mb-2 block" data-en="Plus Magic" data-ur="پلس میجک">Plus Magic</span>
+                    <h2 class="text-3xl font-extrabold display-font flex items-baseline gap-1">
+                        <span data-en="$4.5" data-ur="$4.5">$4.5</span>
+                        <span class="text-slate-400 text-sm font-medium" data-en="/mo" data-ur="/ماہ">/mo</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm font-medium mt-2" data-en="For power users who want unlimited everything." data-ur="ان طاقتور صارفین کے لیے جو لامحدود چاہتے ہیں۔">For power users who want unlimited everything.</p>
+                </div>
+                
+                <ul class="space-y-4 mb-10 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Unlimited creations per day" data-ur="روزانہ لامحدود تخلیقات">Unlimited creations per day</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Everything in Pro" data-ur="پرو کی تمام خصوصیات">Everything in Pro</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Project Folders with Memory" data-ur="یادداشت کے ساتھ پروجیکٹ فولڈرز">Project Folders with Memory</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Advanced Copy Formats" data-ur="اعلیٰ کاپی فارمیٹس">Advanced Copy Formats</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Provider routing + premium templates" data-ur="پرووائیڈر روٹنگ + پریمیم ٹیمپلیٹس">Provider routing + premium templates</span>
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-semibold text-slate-600">
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span data-en="Priority 24/7 Support" data-ur="ترجیحی 24/7 مدد">Priority 24/7 Support</span>
+                    </li>
+                </ul>
+
+                <button id="plus-btn" data-plan="plus" class="subscribe-btn w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-bold hover:from-purple-700 hover:to-indigo-700 transition-all active:scale-95 shadow-xl shadow-purple-500/20" data-en="Upgrade to Plus" data-ur="پلس پر اپ گریڈ کریں">Upgrade to Plus</button>
+            </div>
+
+            
+        </div>
+
+        <div class="mt-20 text-center">
+            <p class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-6" data-en="Trusted by Creators Worldwide" data-ur="دنیا بھر کے تخلیق کاروں کا بھروسہ">Trusted by Creators Worldwide</p>
+            <div class="flex flex-wrap justify-center gap-12 opacity-30 grayscale">
+                <i class="fa-brands fa-google text-2xl"></i>
+                <i class="fa-brands fa-microsoft text-2xl"></i>
+                <i class="fa-brands fa-amazon text-2xl"></i>
+                <i class="fa-brands fa-meta text-2xl"></i>
+            </div>
+        </div>
+
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <div id="notice" class="hidden fixed bottom-6 right-6 z-[1200] max-w-sm w-[92vw] sm:w-full rounded-2xl border px-4 py-3 shadow-2xl bg-white">
+        <div class="flex items-start gap-3">
+            <div id="notice-icon" class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div class="min-w-0">
+                <p id="notice-title" class="font-extrabold text-slate-900 text-sm">Notice</p>
+                <p id="notice-message" class="text-xs text-slate-500 font-medium mt-1">Message</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') {
+                globalApplyLang();
+            }
+        }
+
+        async function parseApiResponse(response) {
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return response.json();
+            }
+            const text = await response.text();
+            if (text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+                throw new Error('Please sign in to continue.');
+            }
+            throw new Error(text || 'Unexpected server response');
+        }
+
+        function showNotice(type, title, message) {
+            const notice = document.getElementById('notice');
+            const icon = document.getElementById('notice-icon');
+            const titleEl = document.getElementById('notice-title');
+            const msgEl = document.getElementById('notice-message');
+            if (!notice || !icon || !titleEl || !msgEl) return;
+
+            const palette = {
+                success: ['bg-emerald-100 text-emerald-700', 'fa-solid fa-circle-check'],
+                error: ['bg-rose-100 text-rose-700', 'fa-solid fa-triangle-exclamation'],
+                info: ['bg-blue-100 text-blue-700', 'fa-solid fa-circle-info']
+            };
+            const [iconClasses, iconName] = palette[type] || palette.info;
+            icon.className = `w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${iconClasses}`;
+            icon.innerHTML = `<i class="${iconName}"></i>`;
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            notice.classList.remove('hidden');
+            clearTimeout(window.noticeTimer);
+            window.noticeTimer = setTimeout(() => notice.classList.add('hidden'), 4200);
+        }
+
+        async function startCheckout(plan, button) {
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Redirecting...';
+            try {
+                const response = await fetch('/billing/checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan })
+                });
+                const data = await parseApiResponse(response);
+                if (!response.ok || !data.url) throw new Error(data.error || 'Failed to create checkout session');
+                window.location.href = data.url;
+            } catch (err) {
+                showNotice('error', 'Checkout failed', err.message || 'Could not start checkout.');
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+
+        async function openBillingPortal() {
+            try {
+                const response = await fetch('/billing/customer-portal', { method: 'POST' });
+                const data = await parseApiResponse(response);
+                if (!response.ok || !data.url) throw new Error(data.error || 'Could not open billing portal');
+                window.location.href = data.url;
+            } catch (err) {
+                showNotice('error', 'Billing unavailable', err.message || 'Billing portal unavailable.');
+            }
+        }
+
+        async function updatePlanState() {
+            try {
+                const response = await fetch('/billing/status');
+                if (!response.ok) return;
+                const status = await parseApiResponse(response);
+                const activePlan = status.plan || 'free';
+                const buttons = document.querySelectorAll('.subscribe-btn');
+                buttons.forEach((button) => {
+                    if (button.dataset.plan === activePlan && ['active', 'trialing', 'past_due', 'pending'].includes(status.status)) {
+                        button.textContent = 'Current Plan';
+                        button.disabled = true;
+                        button.classList.add('opacity-70', 'cursor-not-allowed');
+                    }
+                });
+
+                if (status.status && status.status !== 'inactive') {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mt-8';
+                    wrap.innerHTML = '<button id="manage-subscription-btn" class="py-3 px-6 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-700 transition-all">Manage Subscription</button>';
+                    document.querySelector('main').appendChild(wrap);
+                    document.getElementById('manage-subscription-btn').addEventListener('click', openBillingPortal);
+                }
+            } catch (_) {}
+        }
+
+        async function updateFreeUsageBanner() {
+            try {
+                const response = await fetch('/user/dashboard-data');
+                const data = await parseApiResponse(response);
+                if (!response.ok) return;
+                const isLimited = Boolean(data?.usage?.isLimited);
+                const usedToday = Number(data?.usage?.usedToday || 0);
+                const limit = Number(data?.usage?.dailyLimit || 40);
+                const banner = document.getElementById('free-usage-banner');
+                const text = document.getElementById('free-usage-text');
+                if (!banner || !text) return;
+                if (isLimited) {
+                    text.textContent = `Free usage: ${usedToday}/${limit} today`;
+                    banner.classList.remove('hidden');
+                } else {
+                    text.textContent = `Unlimited usage on ${(data?.subscription?.plan || 'pro').toUpperCase()} plan`;
+                }
+            } catch (_) {}
+        }
+
+        document.querySelectorAll('.subscribe-btn').forEach((button) => {
+            button.addEventListener('click', () => startCheckout(button.dataset.plan, button));
+        });
+
+        async function confirmCheckoutFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const checkoutState = params.get('checkout');
+            const sessionId = params.get('session_id');
+            if (checkoutState !== 'success' || !sessionId) return;
+            try {
+                const response = await fetch('/billing/confirm-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+                const data = await parseApiResponse(response);
+                if (!response.ok || !data.success) throw new Error(data.error || 'Could not confirm payment');
+                params.delete('session_id');
+                const qs = params.toString();
+                const cleanUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+                window.history.replaceState({}, '', cleanUrl);
+                showNotice('success', 'Subscription active', 'Your plan is now active and ready to use.');
+                
+                // Trigger Confetti Celebration
+                const duration = 4000;
+                const end = Date.now() + duration;
+                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
+                
+                (function frame() {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: colors,
+                        zIndex: 1000
+                    });
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: colors,
+                        zIndex: 1000
+                    });
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+
+            } catch (err) {
+                showNotice('error', 'Confirmation issue', err.message || 'Payment succeeded but confirmation failed. Please refresh.');
+            }
+        }
+
+        confirmCheckoutFromUrl();
+        updatePlanState();
+        updateFreeUsageBanner();
+        window.onload = applyLang;
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

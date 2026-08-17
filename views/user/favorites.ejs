@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif'],urdu:['Jameel Noori Nastaleeq','sans-serif']}}}}</script>
+    <style>
+        body { background:#f8fafc; font-family:'Inter',sans-serif; }
+        .display-font { font-family:'Outfit',sans-serif; }
+        .fav-card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; transition:all .2s; }
+        .fav-card:hover { border-color:#bfdbfe; box-shadow:0 10px 24px rgba(37,99,235,.08); transform:translateY(-2px); }
+        .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        [dir="rtl"] { font-family:'Jameel Noori Nastaleeq',serif !important; }
+        [dir="rtl"] .display-font { font-family:'Jameel Noori Nastaleeq',serif !important; }
+    </style>
+    
+</head>
+<body class="antialiased text-slate-900">
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen px-4 md:px-8 py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-6">
+                <h1 class="text-2xl md:text-3xl font-extrabold display-font" data-en="Your Favorites" data-ur="آپ کے پسندیدہ">Your Favorites</h1>
+                <p class="text-sm text-slate-500 font-medium mt-1" data-en="Saved prompts for your current account." data-ur="آپ کے موجودہ اکاؤنٹ کے محفوظ شدہ پرامپٹس۔">Saved prompts for your current account.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-3 mb-5">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input id="search-input" type="text" class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400" data-placeholder-en="Search favorites..." data-placeholder-ur="پسندیدہ تلاش کریں..." placeholder="Search favorites...">
+                </div>
+            </div>
+
+            <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </div>
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <div id="preview-modal" class="hidden fixed inset-0 bg-slate-900/45 backdrop-blur-sm z-[1200] items-center justify-center p-4" onclick="if(event.target===this)closePreview()">
+        <div class="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between gap-3">
+                <h3 id="preview-title" class="text-lg font-extrabold text-slate-900">Favorite</h3>
+                <button onclick="closePreview()" class="w-9 h-9 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="preview-content" class="mt-3 text-sm text-slate-700 whitespace-pre-wrap max-h-[60vh] overflow-y-auto"></p>
+            <div class="mt-4 flex items-center justify-end gap-2">
+                <button onclick="copyCurrent()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 text-sm font-bold">Copy</button>
+                <button onclick="remixCurrent()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold">Remix</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let favorites = [];
+        let filtered = [];
+        let selected = null;
+
+        function esc(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        async function loadFavorites() {
+            try {
+                const res = await fetch('/user/favorites');
+                if (!res.ok) throw new Error('Could not load favorites');
+                favorites = await res.json();
+                applyFilter();
+            } catch (_) {
+                const ur = (localStorage.getItem('preferred_lang') || 'en') === 'ur';
+                document.getElementById('favorites-grid').innerHTML = `<div class="col-span-full bg-white border border-rose-100 text-rose-600 rounded-xl p-4 text-sm font-semibold">${ur ? 'پسندیدہ لوڈ نہیں ہو سکے۔' : 'Could not load favorites.'}</div>`;
+            }
+        }
+
+        function applyFilter() {
+            const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+            filtered = favorites.filter(f => `${f.title || ''} ${f.content || ''} ${f.category || ''}`.toLowerCase().includes(q));
+            renderFavorites();
+        }
+
+        function renderFavorites() {
+            const grid = document.getElementById('favorites-grid');
+            const ur = (localStorage.getItem('preferred_lang') || 'en') === 'ur';
+            if (!filtered.length) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white border border-slate-200 rounded-2xl p-10 text-center">
+                        <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 mx-auto mb-3 flex items-center justify-center"><i class="fa-solid fa-heart"></i></div>
+                        <p class="text-sm font-bold text-slate-700">${ur ? 'ابھی کوئی پسندیدہ محفوظ نہیں۔' : 'No favorites saved yet.'}</p>
+                        <a href="/user/enhance-creation" class="inline-block mt-2 text-sm font-bold text-blue-600 hover:underline">${ur ? 'ابھی بنائیں' : 'Create one now'}</a>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(f => `
+                <div class="fav-card p-4">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <div class="min-w-0">
+                            <h3 class="text-sm font-extrabold text-slate-900 truncate">${esc(f.title || 'My Favorite')}</h3>
+                            <p class="text-[10px] font-bold text-slate-400 mt-0.5">${new Date(f.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-full">${esc(f.category || 'general')}</span>
+                    </div>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-3">${esc(f.content || '')}</p>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openPreview(${f.id})" class="flex-1 h-8 rounded-lg border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-slate-50"><i class="fa-regular fa-eye mr-1"></i>${ur ? 'دیکھیں' : 'View'}</button>
+                        <button onclick="removeFavorite(${f.id})" class="flex-1 h-8 rounded-lg border border-rose-200 text-[11px] font-bold text-rose-600 hover:bg-rose-50"><i class="fa-regular fa-trash-can mr-1"></i>${ur ? 'حذف' : 'Remove'}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openPreview(id) {
+            selected = favorites.find(f => Number(f.id) === Number(id));
+            if (!selected) return;
+            document.getElementById('preview-title').textContent = selected.title || 'Favorite';
+            document.getElementById('preview-content').textContent = selected.content || '';
+            document.getElementById('preview-modal').classList.remove('hidden');
+            document.getElementById('preview-modal').classList.add('flex');
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.add('hidden');
+            document.getElementById('preview-modal').classList.remove('flex');
+        }
+
+        async function removeFavorite(id) {
+            try {
+                const res = await fetch(`/user/favorites/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Delete failed');
+                favorites = favorites.filter(f => Number(f.id) !== Number(id));
+                applyFilter();
+            } catch (_) {}
+        }
+
+        function copyCurrent() {
+            if (!selected) return;
+            navigator.clipboard.writeText(selected.content || '');
+        }
+
+        function remixCurrent() {
+            if (!selected) return;
+            sessionStorage.setItem('remix_input', selected.content || '');
+            closePreview();
+            window.location.href = '/user/enhance-creation';
+        }
+
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') globalApplyLang();
+            const input = document.getElementById('search-input');
+            if (input) {
+                const ur = (localStorage.getItem('preferred_lang') || 'en') === 'ur';
+                input.placeholder = ur ? input.getAttribute('data-placeholder-ur') : input.getAttribute('data-placeholder-en');
+            }
+            renderFavorites();
+        }
+
+        window.onload = () => {
+            document.getElementById('search-input').addEventListener('input', applyFilter);
+            loadFavorites().then(() => applyLang());
+        };
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroMagic | Create Masterpieces with AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], urdu: ['Jameel Noori Nastaleeq', 'serif'] },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a', 950: '#172554' }
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 40px -10px rgba(15,23,42,0.1)',
+                        'premium-hover': '0 20px 50px -10px rgba(15,23,42,0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fcfcfc; font-family: 'Inter', sans-serif; transition: all 0.3s ease; overflow-x: hidden; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .page-bg { 
+            background: linear-gradient(180deg, rgba(239, 246, 255, 0.4) 0%, rgba(252, 252, 252, 1) 100%);
+            position: relative;
+        }
+        .page-bg::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', serif !important; font-size: 1.15rem; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', serif !important; }
+        .hero-title-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .premium-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 24px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -4px rgba(15, 23, 42, 0.08);
+            border-color: rgba(203, 213, 225, 1);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(241, 245, 249, 1);
+        }
+    </style>
+</head>
+
+<body class="antialiased text-slate-900 selection:bg-primary-100 selection:text-primary-900">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="/images/logo.jpeg" alt="Logo" class="h-9 w-auto rounded-xl object-contain shadow-sm">
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors" data-en="Features" data-ur="خصوصیات">Features</a>
+                <a href="#workflow" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors" data-en="Solutions" data-ur="حل">Solutions</a>
+                <a href="#pricing" class="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors" data-en="Pricing" data-ur="قیمت">Pricing</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleLang()" class="hidden sm:inline-flex text-xs font-bold text-slate-500 bg-white border border-slate-200 px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-all items-center gap-2 shadow-sm focus:ring-2 focus:ring-slate-200 focus:outline-none">
+                    <i class="fa-solid fa-earth-asia"></i> <span id="lang-label">EN / اردو</span>
+                </button>
+                <a href="/auth/login" class="hidden sm:inline-flex text-sm font-semibold text-slate-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition-all" data-en="Sign in" data-ur="لاگ اِن">Sign in</a>
+                <a href="/user/generate-prompt" class="inline-flex items-center justify-center text-sm font-bold text-white bg-slate-900 px-6 py-2.5 rounded-xl shadow-lg shadow-slate-900/20 hover:bg-black hover:shadow-slate-900/30 hover:-translate-y-0.5 transition-all active:scale-95" data-en="Get started" data-ur="شروع کریں">Get started</a>
+                <button class="sm:hidden w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors" onclick="toggleLang()" aria-label="Toggle language">
+                    <i class="fa-solid fa-earth-asia"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="page-bg pt-36 lg:pt-48 pb-20 lg:pb-32 px-6 relative">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md rounded-full border border-slate-200/60 shadow-sm text-slate-700 font-bold text-[11px] tracking-widest uppercase mb-8 hover:border-slate-300 transition-colors cursor-default">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                </span>
+                <span data-en="A new era of AI instructions" data-ur="AI ہدایات کا نیا دور">A new era of AI prompting</span>
+            </div>
+
+            <h1 class="text-5xl lg:text-7xl font-black display-font tracking-tight leading-[1.08] mb-8">
+                <span class="hero-title-gradient" data-en="Stop guessing." data-ur="اندازے چھوڑ دیں۔">Stop guessing.</span><br>
+                <span class="text-gradient-primary" data-en="Start creating instructions like a pro." data-ur="پرو کی طرح ہدایات بنائیں۔">Start prompting like a pro.</span>
+            </h1>
+
+            <p class="text-slate-500 font-medium text-lg lg:text-xl max-w-2xl mx-auto mb-12 leading-relaxed" data-en="NeuroMagic helps you generate high-quality instructions faster—so you can get better results from any AI model with less effort." data-ur="نیورو میجک آپ کو تیزی سے اعلیٰ معیار کی ہدایات بنانے میں مدد دیتا ہے تاکہ آپ کم محنت میں کسی بھی AI ماڈل سے بہتر نتائج حاصل کریں۔">
+                NeuroMagic helps you generate high-quality prompts faster—so you can get better results from any AI model with less effort.
+            </p>
+
+            <div class="w-full max-w-2xl mx-auto mb-8">
+                <form action="/user/generate-prompt" method="GET" class="relative flex items-center shadow-2xl rounded-2xl bg-white border border-slate-200/80 hover:border-slate-300 transition-colors">
+                    <input type="text" name="q" placeholder="What do you want to create?" class="w-full px-6 py-5 rounded-2xl focus:outline-none text-slate-900 pr-40 text-lg bg-transparent" />
+                    <button type="submit" class="absolute right-2 top-2 bottom-2 px-6 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 transition-colors flex items-center gap-2 shadow-md shadow-primary-600/20 hover:-translate-y-0.5 active:scale-95">
+                        <span data-en="Generate" data-ur="بنائیں">Generate</span>
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                <a href="/user/generate-prompt" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary-600 text-white rounded-2xl font-bold text-base shadow-lg shadow-primary-600/30 hover:bg-primary-700 hover:shadow-primary-600/40 hover:-translate-y-0.5 transition-all active:scale-95 focus:ring-4 focus:ring-primary-600/20 outline-none">
+                    <span data-en="Get started free" data-ur="مفت شروع کریں">Get started free</span>
+                    <i class="fa-solid fa-arrow-right rtl:rotate-180 text-sm"></i>
+                </a>
+                <a href="/user/templates" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white border border-slate-200 text-slate-800 rounded-2xl font-bold text-base shadow-sm hover:bg-slate-50 hover:border-slate-300 hover:-translate-y-0.5 transition-all active:scale-95 focus:ring-4 focus:ring-slate-200 outline-none">
+                    <i class="fa-regular fa-compass text-slate-500"></i>
+                    <span data-en="Explore Templates" data-ur="ٹیمپلیٹ آزمائیں">Explore Templates</span>
+                </a>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs font-semibold text-slate-400 mb-16">
+                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500/80"></i><span data-en="No credit card required" data-ur="کارڈ کی ضرورت نہیں">No credit card required</span></span>
+                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500/80"></i><span data-en="Works with ChatGPT, Claude, Gemini" data-ur="ChatGPT، Claude، Gemini کے ساتھ">Works with ChatGPT, Claude, Gemini</span></span>
+                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500/80"></i><span data-en="Built for teams & solo creators" data-ur="ٹیمز اور افراد دونوں کے لیے">Built for teams & solo creators</span></span>
+            </div>
+
+            <!-- Explainer Preview -->
+            <section id="creation" class="relative max-w-4xl mx-auto mt-8">
+                <div class="relative bg-white border border-slate-200/80 rounded-[32px] p-2 shadow-2xl shadow-slate-900/5 overflow-hidden ring-1 ring-slate-900/5 group hover:shadow-primary-500/10 transition-shadow">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                    <video class="w-full rounded-[24px] bg-slate-50 object-cover aspect-video" controls preload="metadata" playsinline poster="/images/logo.jpeg">
+                        <source src="/explainer.mp4" type="video/mp4" />
+                    </video>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 max-w-3xl mx-auto">
+                <h2 class="text-3xl lg:text-5xl font-black display-font tracking-tight mb-5">
+                    <span class="text-slate-900" data-en="Engineered for precision," data-ur="درستگی کے لیے تیار،">Engineered for precision,</span><br>
+                    <span class="text-slate-400" data-en="built for everyone." data-ur="سب کے لیے بنایا گیا۔">built for everyone.</span>
+                </h2>
+                <p class="text-slate-500 font-medium text-lg leading-relaxed" data-en="From quick ideas to detailed workflows—NeuroMagic gives you repeatable, high-quality instruction patterns that eliminate guesswork." data-ur="تیز آئیڈیاز سے لے کر مکمل ورک فلو تک—نیورو میجک آپ کو بار بار استعمال ہونے والے، اعلیٰ معیار کے انسٹرکشن پیٹرنز دیتا ہے۔">
+                    From quick ideas to detailed workflows—NeuroMagic gives you repeatable, high-quality prompting patterns that eliminate guesswork.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-blue-500/30">
+                        <i class="fa-solid fa-lightbulb text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="Instant idea to instruction" data-ur="آئیڈیا سے فوراً ہدایت">Instant idea to prompt</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Turn messy thoughts into structured, role-based instructions in seconds using our proprietary architect engine." data-ur="بکھرے خیالات کو سیکنڈز میں منظم ہدایات میں بدلیں۔">Turn messy thoughts into structured, role-based prompts in seconds using our proprietary architect engine.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-indigo-500/30">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="Smarter templates" data-ur="سمارٹ ٹیمپلیٹس">Smarter templates</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Leverage proven patterns for coding, writing, business strategy, and more. Stop starting from scratch." data-ur="تحریر، کوڈنگ، کاروبار وغیرہ کے لیے آزمودہ پیٹرنز استعمال کریں۔">Leverage proven patterns for coding, writing, business strategy, and more. Stop starting from scratch.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-emerald-500/30">
+                        <i class="fa-solid fa-bullseye text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="More consistent results" data-ur="زیادہ مستقل نتائج">More consistent results</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Reduce AI hallucinations and trial-and-error with clear instructions, tone settings, and rigid constraints." data-ur="واضح ہدایات اور حدود کے ساتھ بار بار ٹرائی کم کریں۔">Reduce AI hallucinations and trial-and-error with clear instructions, tone settings, and rigid constraints.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-amber-500/30">
+                        <i class="fa-solid fa-chart-pie text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="Analytics & insights" data-ur="تجزیہ اور بصیرت">Analytics & insights</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Track what works. Monitor your token usage, daily limits, and most used instruction styles effortlessly." data-ur="کیا کام کرتا ہے دیکھیں اور وقت کے ساتھ بہتر بنائیں۔">Track what works. Monitor your token usage, daily limits, and most used prompt styles effortlessly.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-rose-500/30">
+                        <i class="fa-regular fa-bookmark text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="Library & Reuse" data-ur="ایکسپورٹ اور دوبارہ استعمال">Library & Reuse</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Save your best creations to your personal favorites library. Build a repository of your perfect instructions." data-ur="ہدایات کاپی کریں، محفوظ کریں اور پروجیکٹس میں استعمال کریں۔">Save your best creations to your personal favorites library. Build a repository of your perfect prompts.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="premium-card p-8 text-left rtl:text-right group">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-slate-800 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-slate-500/30">
+                        <i class="fa-solid fa-layer-group text-xl"></i>
+                    </div>
+                    <h3 class="font-bold display-font text-xl mb-3 text-slate-900" data-en="Project Memory" data-ur="پروجیکٹ میموری">Project Memory</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed" data-en="Group contexts into projects. Maintain long-running AI contexts seamlessly (available for Plus users)." data-ur="تیز، واضح اور اسکیل کے لیے صاف ورک فلو۔">Group contexts into projects. Maintain long-running AI contexts seamlessly (available for Plus users).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="py-24 px-6 bg-slate-50/60 border-y border-slate-100 relative">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 max-w-2xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-black display-font tracking-tight mb-4 text-slate-900">
+                    <span data-en="Built for your workflow" data-ur="آپ کے ورک فلو کے لیے">Built for your workflow</span>
+                </h2>
+                <p class="text-slate-500 font-medium text-lg leading-relaxed" data-en="Whether you’re a student, developer, or marketer—pick a starting point and ship better results instantly." data-ur="آپ طالبعلم ہوں، ڈویلپر یا مارکیٹر—ایک نقطہ آغاز چنیں اور بہتر نتائج حاصل کریں۔">
+                    Whether you’re a student, developer, or marketer—pick a starting point and ship better results instantly.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-3xl p-8 text-left rtl:text-right shadow-sm border border-slate-200">
+                    <h3 class="font-bold display-font text-xl mb-5 text-slate-900 flex items-center gap-3" data-en="Students" data-ur="طلبہ">
+                        <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class="fa-solid fa-graduation-cap"></i></span> Students
+                    </h3>
+                    <ul class="space-y-4 text-slate-600 font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-primary-500 mt-1"></i> <span data-en="Summaries & study guides" data-ur="خلاصہ اور اسٹڈی گائیڈز">Summaries & study guides</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-primary-500 mt-1"></i> <span data-en="Essay outlines & structure" data-ur="مضمون کا خاکہ">Essay outlines & structure</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-primary-500 mt-1"></i> <span data-en="Explain complex concepts" data-ur="تصورات آسانی سے سمجھیں">Explain complex concepts</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 text-left rtl:text-right shadow-sm border border-slate-200">
+                    <h3 class="font-bold display-font text-xl mb-5 text-slate-900 flex items-center gap-3" data-en="Developers" data-ur="ڈویلپرز">
+                        <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class="fa-solid fa-code"></i></span> Developers
+                    </h3>
+                    <ul class="space-y-4 text-slate-600 font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i> <span data-en="Debug faster with context" data-ur="تیزی سے ڈیبگ">Debug faster with context</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i> <span data-en="Refactor & document code" data-ur="ریفیکٹر اور ڈاکیومنٹ">Refactor & document code</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i> <span data-en="Generate precise unit tests" data-ur="ٹیسٹس بنائیں">Generate precise unit tests</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 text-left rtl:text-right shadow-sm border border-slate-200">
+                    <h3 class="font-bold display-font text-xl mb-5 text-slate-900 flex items-center gap-3" data-en="Marketers" data-ur="مارکیٹرز">
+                        <span class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class="fa-solid fa-bullhorn"></i></span> Marketers
+                    </h3>
+                    <ul class="space-y-4 text-slate-600 font-medium">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-amber-500 mt-1"></i> <span data-en="Brainstorm campaign ideas" data-ur="مہم کے آئیڈیاز">Brainstorm campaign ideas</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-amber-500 mt-1"></i> <span data-en="High-converting ad copy" data-ur="ایڈ کاپی اور ہُکس">High-converting ad copy</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-amber-500 mt-1"></i> <span data-en="Content calendars & strategy" data-ur="کنٹینٹ کیلنڈر">Content calendars & strategy</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="pricing" class="py-24 px-6 bg-white">
+        <div class="max-w-5xl mx-auto">
+            <div class="bg-slate-900 rounded-[32px] p-10 lg:p-16 text-center text-white shadow-2xl shadow-slate-900/30 relative overflow-hidden group">
+                <div class="absolute inset-0 opacity-30 pointer-events-none group-hover:opacity-40 transition-opacity duration-1000" style="background: radial-gradient(circle at 50% -20%, #3b82f6 0%, transparent 60%);"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-3xl lg:text-5xl font-black display-font tracking-tight mb-6" data-en="Ready to transform your prompts?" data-ur="اپنی ہدایات کو بہتر بنانے کے لیے تیار؟">Ready to transform your prompts?</h2>
+                    <p class="text-slate-300 font-medium text-lg max-w-2xl mx-auto mb-10 leading-relaxed" data-en="Start free, explore templates, and get professional-grade results from your favorite AI models immediately." data-ur="مفت شروع کریں، ٹیمپلیٹس آزمائیں اور اپنی پسندیدہ AI سے پرو لیول نتائج حاصل کریں۔">
+                        Start free, explore templates, and get professional-grade results from your favorite AI models immediately.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="/user/generate-prompt" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-slate-900 rounded-2xl font-bold hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 active:scale-95 shadow-lg shadow-white/10 focus:ring-4 focus:ring-white/20 outline-none" data-en="Start Creating Free" data-ur="مفت شروع کریں">
+                            Start Creating Free <i class="fa-solid fa-arrow-right rtl:rotate-180 text-sm opacity-80"></i>
+                        </a>
+                        <a href="/auth/login" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-slate-800 border border-slate-700 text-white rounded-2xl font-bold hover:bg-slate-700 hover:-translate-y-1 transition-all duration-300 focus:ring-4 focus:ring-slate-700/50 outline-none" data-en="Sign in to your account" data-ur="لاگ اِن">Sign in to your account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-slate-100 bg-white text-center">
+        <div class="flex items-center justify-center mb-6">
+            <img src="/images/logo.jpeg" alt="Logo" class="h-10 w-auto rounded-xl object-contain opacity-60 hover:opacity-100 transition-all duration-300 filter grayscale hover:grayscale-0">
+        </div>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest" data-en="Designed for Excellence" data-ur="مہارت اور نفاست کے لیے ڈیزائن کیا گیا">Designed for Excellence</p>
+    </footer>
+
+    <script>
+        function toggleLang() {
+            const currentLang = localStorage.getItem('preferred_lang') === 'en' ? 'ur' : 'en';
+            localStorage.setItem('preferred_lang', currentLang);
+            applyLang();
+        }
+
+        function applyLang() {
+            const lang = localStorage.getItem('preferred_lang') || 'en';
+            const ur = lang === 'ur';
+            document.getElementById('html-root').setAttribute('dir', ur ? 'rtl' : 'ltr');
+            
+            // Font Size adjustment for Urdu readability
+            document.body.style.fontSize = ur ? '1.05rem' : '';
+
+            // Logo Swap
+            const logo = document.querySelector('nav img[alt="Logo"]');
+            if (logo) logo.src = ur ? '/images/logourdu.jpeg' : '/images/logo.jpeg';
+            
+            const footerLogo = document.querySelector('footer img[alt="Logo"]');
+            if (footerLogo) footerLogo.src = ur ? '/images/logourdu.jpeg' : '/images/logo.jpeg';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = ur ? el.getAttribute('data-ur') : el.getAttribute('data-en');
+                if (text) {
+                    const icon = el.querySelector('i');
+                    if (icon) {
+                        const temp = icon.outerHTML;
+                        el.innerHTML = temp + ' ' + text;
+                    } else {
+                        el.innerText = text;
+                    }
+                }
+            });
+        }
+        window.onload = applyLang;
+    </script>
+</body>
+</html>

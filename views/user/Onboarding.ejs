@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalize Your Magic | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premium: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], urdu: ['Jameel Noori Nastaleeq', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fcfcfd; color: #1e293b; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.1) 0%, rgba(252, 252, 253, 1) 70%);
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+        }
+
+        .onboarding-container {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            height: 100vh;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .glass-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 48px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            transform: translateY(-4px);
+        }
+
+        .option-btn.selected {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-dots {
+            position: fixed; bottom: 3rem; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 12px; z-index: 10;
+        }
+
+        .dot {
+            width: 8px; height: 8px; border-radius: 4px; background: #e2e8f0; transition: all 0.4s ease;
+        }
+
+        .dot.active {
+            width: 24px; background: #3b82f6;
+        }
+
+        /* --- Logo branding: use logical inset so it flips in RTL --- */
+        .brand-bar {
+            position: fixed;
+            top: 2.5rem;
+            inset-inline-start: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 20;
+        }
+
+        /* =====================  RTL / Urdu overrides  ===================== */
+        [dir="rtl"] {
+            font-family: 'Jameel Noori Nastaleeq', 'Inter', sans-serif !important;
+        }
+        [dir="rtl"] .display-font {
+            font-family: 'Jameel Noori Nastaleeq', sans-serif !important;
+        }
+
+        /* Nastaleeq renders taller — reduce heading sizes and increase line-height */
+        [dir="rtl"] .onboard-heading {
+            font-size: 2rem !important;
+            line-height: 1.6 !important;
+        }
+        @media (min-width: 1024px) {
+            [dir="rtl"] .onboard-heading {
+                font-size: 2.5rem !important;
+            }
+        }
+
+        [dir="rtl"] .onboard-sub {
+            font-size: 1rem !important;
+            line-height: 2 !important;
+        }
+
+        /* Role option labels — Nastaleeq needs more vertical room */
+        [dir="rtl"] .option-btn {
+            padding: 1.25rem 1rem 1.75rem;
+            line-height: 1.8;
+        }
+
+        [dir="rtl"] .option-btn .role-label {
+            font-size: 1rem;
+            line-height: 2;
+        }
+
+        /* Finish button text */
+        [dir="rtl"] .finish-label {
+            font-size: 1rem;
+            line-height: 2;
+        }
+
+        /* Flip the arrow icon in RTL via CSS transform (works universally) */
+        [dir="rtl"] .arrow-icon {
+            transform: scaleX(-1);
+        }
+
+        /* Nav dots should not reverse order in RTL */
+        [dir="rtl"] .nav-dots {
+            direction: ltr;
+        }
+
+        /* Language picker Urdu label — always use Nastaleeq regardless of current dir */
+        .urdu-label {
+            font-family: 'Jameel Noori Nastaleeq', sans-serif;
+        }
+
+        /* --- Mobile adjustments --- */
+        @media (max-width: 640px) {
+            .glass-card { padding: 2rem 1.5rem; border-radius: 32px; }
+            .brand-bar { top: 1.25rem; inset-inline-start: 1.25rem; }
+            [dir="rtl"] .onboard-heading { font-size: 1.6rem !important; }
+        }
+    </style>
+    
+</head>
+<body class="antialiased">
+    <div class="hero-gradient"></div>
+
+    <!-- Logo — uses logical inset so it auto-flips to right side in RTL -->
+    <div class="brand-bar">
+        <img src="/images/logo.jpeg" class="w-16 h-16 rounded-2xl border border-white" alt="Logo">
+        <span class="display-font font-bold text-xl tracking-wider text-slate-900">NeuroMagic</span>
+    </div>
+
+    <div class="onboarding-container" id="slider">
+        
+        <!-- Slide 1: Welcome & Language -->
+        <div class="slide">
+            <div class="glass-card text-center">
+                <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-8 animate-bounce shadow-lg shadow-blue-500/10">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-extrabold display-font mb-4 text-slate-900 onboard-heading" data-en="A World of Magic Awaits" data-ur="جادو کی دنیا آپ کی منتظر ہے">A World of Magic Awaits</h1>
+                <p class="text-slate-500 font-medium mb-12 onboard-sub" data-en="Choose your preferred language to start." data-ur="شروع کرنے کے لیے اپنی پسندیدہ زبان منتخب کریں۔">Choose your preferred language to start.</p>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <button onclick="setLang('en')" class="option-btn group">
+                        <span class="block text-2xl font-bold mb-2">English</span>
+                        <span class="text-xs opacity-50">Global Standard</span>
+                    </button>
+                    <button onclick="setLang('ur')" class="option-btn group">
+                        <span class="block text-2xl font-bold mb-2 urdu-label">اردو</span>
+                        <span class="text-xs opacity-50 urdu-label">قومی زبان</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Your Role -->
+        <div class="slide">
+            <div class="glass-card">
+                <h1 class="text-4xl lg:text-5xl font-extrabold display-font text-center mb-4 text-slate-900 onboard-heading" data-en="Tell us about yourself" data-ur="اپنے بارے میں بتائیں">Tell us about yourself</h1>
+                <p class="text-slate-500 font-medium text-center mb-12 onboard-sub" data-en="We'll personalize the results for your career." data-ur="ہم آپ کے کیریئر کے مطابق نتائج فراہم کریں گے۔">We'll personalize the results for your career.</p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div onclick="selectRole(this, 'Entrepreneur')" class="option-btn flex flex-col items-center">
+                        <i class="fa-solid fa-rocket text-2xl mb-3"></i>
+                        <span class="font-bold role-label" data-en="Entrepreneur" data-ur="کاروباری شخصیت">Entrepreneur</span>
+                    </div>
+                    <div onclick="selectRole(this, 'Content Creator')" class="option-btn flex flex-col items-center">
+                        <i class="fa-solid fa-clapperboard text-2xl mb-3"></i>
+                        <span class="font-bold role-label" data-en="Creator" data-ur="تخلیق کار">Creator</span>
+                    </div>
+                    <div onclick="selectRole(this, 'Developer')" class="option-btn flex flex-col items-center">
+                        <i class="fa-solid fa-code text-2xl mb-3"></i>
+                        <span class="font-bold role-label" data-en="Developer" data-ur="ڈیولپر">Developer</span>
+                    </div>
+                    <div onclick="selectRole(this, 'Student')" class="option-btn flex flex-col items-center">
+                        <i class="fa-solid fa-user-graduate text-2xl mb-3"></i>
+                        <span class="font-bold role-label" data-en="Student" data-ur="طالب علم">Student</span>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <button onclick="finishOnboarding()" id="finish-btn" disabled class="w-full py-5 bg-slate-900 text-white rounded-3xl font-bold shadow-2xl opacity-50 cursor-not-allowed transform transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <span class="finish-label" data-en="Enter the Realm" data-ur="جادو کی دنیا میں داخل ہوں">Enter the Realm</span>
+                        <i class="fa-solid fa-arrow-right text-xs arrow-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-dots">
+        <div class="dot active" id="dot-0"></div>
+        <div class="dot" id="dot-1"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let selectedRole = '';
+        const slider = document.getElementById('slider');
+
+        function isRTL() {
+            return document.getElementById('html-root').getAttribute('dir') === 'rtl';
+        }
+
+        function setLang(lang) {
+            localStorage.setItem('preferred_lang', lang);
+            currentSlide = 1;
+            applyLang();
+            updateUI();
+        }
+
+        function applyLang() {
+            const lang = localStorage.getItem('preferred_lang') || 'en';
+            const ur = lang === 'ur';
+
+            // Set direction and lang attribute
+            const root = document.getElementById('html-root');
+            root.setAttribute('dir', ur ? 'rtl' : 'ltr');
+            root.setAttribute('lang', ur ? 'ur' : 'en');
+
+            // Swap text content
+            document.querySelectorAll('[data-en]').forEach(el => {
+                el.innerText = ur ? el.getAttribute('data-ur') : el.getAttribute('data-en');
+            });
+        }
+
+        function updateUI() {
+            // In RTL, the flex row is reversed by the browser, so we need
+            // to translate in the positive direction to show the "next" slide.
+            const offset = currentSlide * 100;
+            if (isRTL()) {
+                slider.style.transform = `translateX(${offset}%)`;
+            } else {
+                slider.style.transform = `translateX(-${offset}%)`;
+            }
+
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function selectRole(btn, role) {
+            // Only clear role option buttons on slide 2, not the language buttons on slide 1
+            btn.closest('.glass-card').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedRole = role;
+            const finishBtn = document.getElementById('finish-btn');
+            finishBtn.disabled = false;
+            finishBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            finishBtn.classList.add('hover:bg-black');
+        }
+
+        async function finishOnboarding() {
+            const btn = document.getElementById('finish-btn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            try {
+                await fetch('/user/update-preferences', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        preferred_lang: localStorage.getItem('preferred_lang'),
+                        user_role: selectedRole
+                    })
+                });
+                window.location.href = '/user/dashboard';
+            } catch (e) {
+                window.location.href = '/user/dashboard';
+            }
+        }
+
+        window.onload = function() {
+            applyLang();
+            updateUI();
+        };
+    </script>
+</body>
+</html>
+

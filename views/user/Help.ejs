@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Help & FAQ | NeuroMagic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/jameel-noori@1.1.2/jameel-noori.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'], urdu: ['Jameel Noori Nastaleeq', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fcfcfd; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .display-font { font-family: 'Outfit', sans-serif; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.05) 0%, rgba(252, 252, 253, 1) 70%); }
+        [dir="rtl"] { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+        [dir="rtl"] .display-font { font-family: 'Jameel Noori Nastaleeq', sans-serif !important; }
+    </style>
+    
+</head>
+<body class="antialiased text-slate-900 pb-24 lg:pb-0">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="lg:ml-64 min-h-screen hero-gradient py-12 lg:py-20 px-6 transition-all duration-300 rtl:ml-0 rtl:lg:mr-64">
+        
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl font-extrabold display-font tracking-tight mb-4" data-en="How can we help?" data-ur="ہم آپ کی کیا مدد کر سکتے ہیں؟">How can we help?</h1>
+            <p class="text-slate-500 font-medium mb-12 text-lg" data-en="Find answers to common questions or reach out to our team." data-ur="عام سوالات کے جوابات تلاش کریں یا ہماری ٹیم سے رابطہ کریں۔">Find answers to common questions or reach out to our team.</p>
+
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <div class="bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-xl hover:shadow-blue-500/5 transition-all group">
+                    <h3 class="text-lg font-bold display-font mb-3 flex items-center justify-between">
+                        <span data-en="How does the AI Enhancer work?" data-ur="AI انہانسر کیسے کام کرتا ہے؟">How does the AI Enhancer work?</span>
+                        <i class="fa-solid fa-plus text-slate-300 group-hover:text-blue-500 transition-colors"></i>
+                    </h3>
+                    <p class="text-slate-500 font-medium" data-en="NeuroMagic uses advanced AI to analyze your rough ideas and rewrite them into highly specific, professional instructions. We add context, constraints, and professional formatting automatically." data-ur="نیورو میجک آپ کے خام خیالات کا تجزیہ کرنے اور انہیں انتہائی مخصوص، پیشہ ورانہ ہدایات میں دوبارہ لکھنے کے لیے جدید AI کا استعمال کرتا ہے۔ ہم خود بخود سیاق و سباق، رکاوٹیں اور پیشہ ورانہ فارمیٹنگ شامل کرتے ہیں۔">NeuroMagic uses advanced AI to analyze your rough ideas and rewrite them into highly specific, professional instructions. We add context, constraints, and professional formatting automatically.</p>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-xl hover:shadow-blue-500/5 transition-all group">
+                    <h3 class="text-lg font-bold display-font mb-3 flex items-center justify-between">
+                        <span data-en="Can I save my creations?" data-ur="کیا میں اپنی تخلیقات محفوظ کر سکتا ہوں؟">Can I save my creations?</span>
+                        <i class="fa-solid fa-plus text-slate-300 group-hover:text-blue-500 transition-colors"></i>
+                    </h3>
+                    <p class="text-slate-500 font-medium" data-en="Absolutely. Once you're logged in, you can tap the bookmark icon on any result to save it to your Library for later use." data-ur="بالکل۔ لاگ ان ہونے کے بعد، آپ کسی بھی نتیجے پر بک مارک آئیکن کو ٹیپ کر کے اسے بعد میں استعمال کے لیے اپنی لائبریری میں محفوظ کر سکتے ہیں۔">Absolutely. Once you're logged in, you can tap the bookmark icon on any result to save it to your Library for later use.</p>
+                </div>
+            </div>
+
+            <div class="mt-20 bg-slate-900 rounded-[40px] p-12 text-center text-white shadow-2xl shadow-blue-500/20">
+                <h2 class="text-3xl font-bold display-font mb-4" data-en="Still have questions?" data-ur="مزید سوالات ہیں؟">Still have questions?</h2>
+                <p class="text-slate-400 font-medium mb-8" data-en="Drop us a line and we'll get back to you in under 24 hours." data-ur="ہمیں پیغام بھیجیں اور ہم 24 گھنٹوں کے اندر آپ سے رابطہ کریں گے۔">Drop us a line and we'll get back to you in under 24 hours.</p>
+                <button class="px-10 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-500/20" data-en="Contact Support" data-ur="سپورٹ سے رابطہ کریں">Contact Support</button>
+            </div>
+        </div>
+
+    </main>
+
+    <%- include('../partials/bottom_nav') %>
+
+    <script>
+        function applyLang() {
+            if (typeof globalApplyLang === 'function') {
+                globalApplyLang();
+            }
+        }
+        window.onload = applyLang;
+        window.addEventListener('languageChanged', applyLang);
+    </script>
+</body>
+</html>

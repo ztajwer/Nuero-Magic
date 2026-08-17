@@ -1,0 +1,41 @@
+{
+  "name": "neuromagic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js",
+    "setup": "node setup_db.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ztajwer/Nuero-Prompt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ztajwer/Nuero-Prompt/issues"
+  },
+  "homepage": "https://github.com/ztajwer/Nuero-Prompt#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.2",
+    "connect-sqlite3": "^0.9.18",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "multer": "^2.1.1",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^8.0.5",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1",
+    "stripe": "^22.1.0"
+  },
+  "allowScripts": {
+    "sqlite3@6.0.1": true
+  }
+}
